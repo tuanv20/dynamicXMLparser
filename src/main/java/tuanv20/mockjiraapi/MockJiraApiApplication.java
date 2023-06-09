@@ -191,14 +191,8 @@ public class MockJiraApiApplication {
                     for(String dataTag : dataTags){
                         //Parse date to epoch if processing TIME tag
                         if(dataTag.equals("TIME")){
-                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String contactTime = dataElement.getElementsByTagName("TIME").item(0).getTextContent();
-                            try{
-                                Date contactDate = df.parse(contactTime);
-                                long epoch = contactDate.getTime();
-                                writer.write("TIME: " + epoch);
-                            }
-                            catch(ParseException e){e.printStackTrace();}
+                            writer.write("TIME: " + dateToEpoch(contactTime));
                         }
                         else{
                        //Grabs the value of the tag specified by dataTag
@@ -217,4 +211,16 @@ public class MockJiraApiApplication {
                 break;
         }
     }
+    
+    private static long dateToEpoch(String date){
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    try{
+        Date contactDate = df.parse(date);
+        long epoch = contactDate.getTime();
+        return epoch;
+    }
+    catch(ParseException e){e.printStackTrace(); return 0;}
+    }
 }
+    
+
