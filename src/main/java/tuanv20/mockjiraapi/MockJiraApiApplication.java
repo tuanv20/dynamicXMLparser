@@ -1,5 +1,6 @@
 package tuanv20.mockjiraapi;
 
+import tuanv20.mockjiraapi.Model.Issue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -93,6 +94,8 @@ public class MockJiraApiApplication {
     **/
 
     public static void modifyEvent(Path filePath, Path directoryPath, String fileName) throws IOException{
+        //Creates Issue (will eventually be added to collection of issues in database)
+        Issue issue = new Issue();
         File outfile = null;
         //File and FileWriter creation (only for demo purposes) 
         //Will be replaced with data structure business logic 
@@ -133,10 +136,11 @@ public class MockJiraApiApplication {
                 Node dataNode = dataList.item(i);
                 //Filters out empty text nodes and processes relevant nodes
                 if(dataNode.getNodeType() == Node.ELEMENT_NODE){
-                    processDataNode(dataNode, doc, writer);
+                    processDataNode(dataNode, doc, writer, issue);
                 }
             }
             writer.close();
+            System.out.println(issue.toString());
         }
         catch(ParserConfigurationException | SAXException | IOException e){
             e.printStackTrace();
@@ -156,7 +160,7 @@ public class MockJiraApiApplication {
     *
     **/
 
-    public static void processDataNode(Node node, Document doc, FileWriter writer) throws IOException{
+    public static void processDataNode(Node node, Document doc, FileWriter writer, Issue issue) throws IOException{
         switch(node.getNodeName()){
             case "PARAMS":
                 writer.write("\nParams\n----------------------------------------------------\n\n");
@@ -208,6 +212,7 @@ public class MockJiraApiApplication {
             
             //First-class data element 
             default:    
+                issue.addFirstClass(node.getNodeName(), node.getTextContent());
                 writer.write("Node " + node.getNodeName() + ": " + node.getTextContent() + "\n");
                 break;
         }
