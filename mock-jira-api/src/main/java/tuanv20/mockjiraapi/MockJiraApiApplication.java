@@ -21,7 +21,7 @@ import java.util.Date;
 
 @SpringBootApplication
 public class MockJiraApiApplication {
-	public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contact-gen";
+	public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\JIRA_API\\mock-jira-api\\contact-gen";
     public static final String[] paramTags = {"NAME", "VALUE"};
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
 
