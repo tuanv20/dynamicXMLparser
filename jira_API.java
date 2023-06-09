@@ -30,6 +30,9 @@ public class jira_API {
         WatchService fileWatcher = FileSystems.getDefault().newWatchService();
         //Absolute path to the directory being watched
         Path directory = Paths.get(ABS_PATH);
+        
+        //Loads XML files that are currently in the directory 
+        loadDirectory(ABS_PATH);
 
         //Subscribed the watchkey to the file creation event 
         directory.register((fileWatcher), StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -49,13 +52,32 @@ public class jira_API {
     public static void handleEvent(WatchEvent<?> event, Path directoryPath, String fileName) throws IOException{
         switch(event.kind().toString()){
             case "ENTRY_MODIFY":
-                modifyEvent(event, directoryPath, fileName);
+                //Absolute path to file, path to directory, fileName
+                modifyEvent(directoryPath.resolve( (Path) event.context()), directoryPath, fileName);
                 break;
             case "ENTRY_DELETE":
                 break;
             case "ENTRY_CREATE":
-                modifyEvent(event, directoryPath, fileName);
+                modifyEvent(directoryPath.resolve( (Path) event.context()), directoryPath, fileName);
                 break;
+        }
+    }
+
+    /**
+    * Helper method that reads in and stores the data from the 
+    * directory being monitored on startup of the program
+    *
+    * @param  directory    Absolute path to directory being loaded represented as a String 
+    *
+    **/
+    public static void loadDirectory(String directory){
+        File path = new File(directory);
+        File [] files = path.listFiles();
+        for(File file: files){
+            Path filePath = Paths.get(file.getAbsolutePath());
+            Path directoryPath = Paths.get(directory);
+            try{modifyEvent(filePath, directoryPath, file.getName());}
+            catch(IOException e){e.printStackTrace();}
         }
     }
 
@@ -71,7 +93,7 @@ public class jira_API {
     *
     **/
 
-    public static void modifyEvent(WatchEvent<?> event, Path directoryPath, String fileName) throws IOException{
+    public static void modifyEvent(Path filePath, Path directoryPath, String fileName) throws IOException{
         File outfile = null;
         //File and FileWriter creation (only for demo purposes) 
         //Will be replaced with data structure business logic 
@@ -90,18 +112,15 @@ public class jira_API {
         }
         FileWriter writer = new FileWriter(outfile.getName());
 
-
-
-        Path filepath = directoryPath.resolve( (Path) event.context());
         try{
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();  
-            Document doc = db.parse(new File(filepath.toString()));
+            Document doc = db.parse(new File(filePath.toString()));
 
             //Element representing the root element 
             Element root = doc.getDocumentElement();
 
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            //http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             root.normalize();
 
             //Retrieve root element and its attributes
