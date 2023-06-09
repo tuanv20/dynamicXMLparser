@@ -1,3 +1,8 @@
+package tuanv20.mockjiraapi;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -14,20 +19,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
-public class jira_API {
-    public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\JIRA_API\\testdir";
+@SpringBootApplication
+public class MockJiraApiApplication {
+	public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contact-gen";
     public static final String[] paramTags = {"NAME", "VALUE"};
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
 
-    /**
-     * Implements WatchService API to monitor file system specified by 
-     * ABS_PATH variable. Constantly polls for changes to the file system 
-     * and handles those events accordingly. 
-     * 
-     **/
-    public static void main(String[] args) throws IOException, InterruptedException {
-        WatchService fileWatcher = FileSystems.getDefault().newWatchService();
+	public static void main(String[] args) throws IOException, InterruptedException{
+		WatchService fileWatcher = FileSystems.getDefault().newWatchService();
         //Absolute path to the directory being watched
         Path directory = Paths.get(ABS_PATH);
         
@@ -47,9 +46,9 @@ public class jira_API {
             //Reset the key to tell it to block and continue to wait for events to take 
             key.reset();
         }
-    }
-
-    public static void handleEvent(WatchEvent<?> event, Path directoryPath, String fileName) throws IOException{
+		SpringApplication.run(MockJiraApiApplication.class, args);
+	}
+	public static void handleEvent(WatchEvent<?> event, Path directoryPath, String fileName) throws IOException{
         switch(event.kind().toString()){
             case "ENTRY_MODIFY":
                 //Absolute path to file, path to directory, fileName
@@ -206,7 +205,8 @@ public class jira_API {
                 }
                 writer.write("----------------------------------------------------\n");
                 break;
-
+            
+            //First-class data element 
             default:    
                 writer.write("Node " + node.getNodeName() + ": " + node.getTextContent() + "\n");
                 break;
