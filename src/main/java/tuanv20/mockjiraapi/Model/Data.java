@@ -15,6 +15,14 @@ public class Data {
         this.cmd = cmd;
     }
 
+    public Data(String[] vars){
+        this.time = Long.parseLong(vars[0]);
+        this.delta_az = Float.parseFloat(vars[1]);
+        this.delta_el = Float.parseFloat(vars[2]);
+        this.tlm_fr = Integer.parseInt(vars[3]);
+        this.cmd = Integer.parseInt(vars[4]);
+    }
+
     public long getTime(){
         return this.time;
     }
@@ -53,5 +61,9 @@ public class Data {
 
       public void setCmd(int cmd){
         this.cmd = cmd;
+    }
+
+    public String toString(){
+        return String.format("[TIME: %d, DELTA_AZ: %.1f, DELTA_EL: %.1f, TLM_FR: %d, CMD: %d]", this.time, this.delta_az, this.delta_el, this.tlm_fr, this.cmd);
     }
 }

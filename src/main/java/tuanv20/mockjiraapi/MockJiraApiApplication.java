@@ -1,8 +1,8 @@
 package tuanv20.mockjiraapi;
-
 import tuanv20.mockjiraapi.Model.Issue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import tuanv20.mockjiraapi.Model.Linechart;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -18,15 +18,15 @@ import javax.xml.parsers.*;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 @SpringBootApplication
 public class MockJiraApiApplication {
 	public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contact-gen";
-    public static final String[] paramTags = {"NAME", "VALUE"};
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
-
-	public static void main(String[] args) throws IOException, InterruptedException{
+    
+	public static void main (String[] args) throws IOException, InterruptedException {
 		WatchService fileWatcher = FileSystems.getDefault().newWatchService();
         //Absolute path to the directory being watched
         Path directory = Paths.get(ABS_PATH);
@@ -140,7 +140,13 @@ public class MockJiraApiApplication {
                 }
             }
             writer.close();
-            System.out.println(issue.toString());
+
+            //Insert visualization logic here 
+            Linechart linechart = new Linechart(fileName.substring(0, fileName.lastIndexOf('.')) + ".png", issue);
+            linechart.createLineChart();
+            System.out.println("First Class: " + issue.getFirstClass() + "\n");
+            System.out.println("Parameters: " + issue.getParams() + "\n");
+            System.out.println("Data: " + issue.getData() + "\n");
         }
         catch(ParserConfigurationException | SAXException | IOException e){
             e.printStackTrace();
@@ -163,19 +169,18 @@ public class MockJiraApiApplication {
     public static void processDataNode(Node node, Document doc, FileWriter writer, Issue issue) throws IOException{
         switch(node.getNodeName()){
             case "PARAMS":
-                writer.write("\nParams\n----------------------------------------------------\n\n");
+                writer.write("----------------------------------------------------\n\nParams\n----------------------------------------------------\n");
 
                 NodeList paramList = doc.getElementsByTagName("PARAM");
                 //Loops through all elements matching PARAM tag name 
                 for(int i = 0; i < paramList.getLength(); i++){
                     //Converts these Nodes back to elements to retrieve data from Name and Value subtags 
-                    Node paramNode = paramList.item(i);
-                    Element paramElement = (Element) paramNode;
-                    for(String paramTag : paramTags){
-                       writer.write("\n" + paramTag + ": " + paramElement.getElementsByTagName(paramTag).item(0).getTextContent());
+                    Element paramElement = (Element) paramList.item(i);
+                    String name = paramElement.getElementsByTagName("NAME").item(0).getTextContent();
+                    String value = paramElement.getElementsByTagName("VALUE").item(0).getTextContent();
+                    issue.addParam(name, value);
+                       writer.write(name + ": " + value + "\n");
                     }
-                    writer.write("\n\n");
-                }
                 writer.write("----------------------------------------------------\n\n");
                 break;
 
@@ -185,29 +190,28 @@ public class MockJiraApiApplication {
                 NodeList dataList = doc.getElementsByTagName("DATAPOINT");
                 //Loops through all elements matching DATAPOINT tag name 
                 for(int i = 0; i < dataList.getLength(); i++){
+                    ArrayList<String> datapointVars = new ArrayList<String>();
                     //Converts these Nodes back to elements to retrieve relevant tag data
-                    Node dataNode = dataList.item(i);
-                    Element dataElement = (Element) dataNode;
+                    Element dataElement = (Element) dataList.item(i);
                     for(String dataTag : dataTags){
                         //Parse date to epoch if processing TIME tag
-                        if(dataTag.equals("TIME")){
-                            String contactTime = dataElement.getElementsByTagName("TIME").item(0).getTextContent();
-                            writer.write("TIME: " + dateToEpoch(contactTime));
-                        }
-                        else{
-                       //Grabs the value of the tag specified by dataTag
-                            writer.write("\n" + dataTag + ": " + dataElement.getElementsByTagName(dataTag).item(0).getTextContent());
-                        }
+                        String value = dataElement.getElementsByTagName(dataTag).item(0).getTextContent();
+                        //Convert value to epoch if processing time datatag
+                        value = dataTag.equals("TIME") ? Long.toString(dateToEpoch(value)) : value;
+                        writer.write(dataTag + ": " + value + "\n");  
+                        datapointVars.add(value);
                     }
-                    writer.write("\n\n");
+                    issue.addDataPoint(datapointVars);
+                    writer.write("\n");
                 }
                 writer.write("----------------------------------------------------\n");
                 break;
             
             //First-class data element 
             default:    
-                issue.addFirstClass(node.getNodeName(), node.getTextContent());
-                writer.write("Node " + node.getNodeName() + ": " + node.getTextContent() + "\n");
+                String value = node.getNodeName() == "AOS" | node.getNodeName() == "LOS" ? Long.toString(dateToEpoch(node.getTextContent())) : node.getTextContent();
+                issue.addFirstClass(node.getNodeName(), value);
+                writer.write(node.getNodeName() + ": " + value + "\n");
                 break;
         }
     }

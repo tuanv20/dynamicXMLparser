@@ -1,28 +1,19 @@
 Root Element: CONTACT
 ----------------------------------------------------
 Project ID: TACO
-Node ID: 12B3C9A1
-Node PN_H: 8
-Node MP: TACO
-Node ANTENNA: DGS-A
-Node AOS: 2023-06-17 14:30:00
-Node LOS: 2023-06-17 15:30:00
+ID: 12B3C9A1
+PN_H: 8
+MP: TACO
+ANTENNA: DGS-A
+AOS: 1687026600000
+LOS: 1687030200000
+----------------------------------------------------
 
 Params
 ----------------------------------------------------
-
-
-NAME: H-EQUIP
-VALUE: KS252-6 KS252-7 WS2_6901
-
-
-NAME: H-CONFIG
-VALUE: D
-
-
-NAME: L-CONFIG
-VALUE: L
-
+H-EQUIP: KS252-6 KS252-7 WS2_6901
+H-CONFIG: D
+L-CONFIG: L
 ----------------------------------------------------
 
 Data
@@ -37,6 +28,18 @@ TIME: 1687026606000
 DELTA_AZ: 0.2
 DELTA_EL: 9.1
 TLM_FR: 2207
+CMD: 6
+
+TIME: 1687026636000
+DELTA_AZ: 0.2
+DELTA_EL: 9.1
+TLM_FR: 2507
+CMD: 6
+
+TIME: 1687026656000
+DELTA_AZ: 0.2
+DELTA_EL: 9.1
+TLM_FR: 2807
 CMD: 6
 
 ----------------------------------------------------
