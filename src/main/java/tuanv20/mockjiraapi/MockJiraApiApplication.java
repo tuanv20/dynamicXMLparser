@@ -6,6 +6,7 @@ import tuanv20.mockjiraapi.Model.Linechart;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
@@ -24,6 +25,7 @@ import java.util.Date;
 @SpringBootApplication
 public class MockJiraApiApplication {
 	public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contact-gen";
+    public static final String ARCHIVE_PATH = "C:\\\\Users\\\\rebed\\\\Work\\\\mock-jira-api\\contacts";
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
     
 	public static void main (String[] args) throws IOException, InterruptedException {
@@ -147,6 +149,10 @@ public class MockJiraApiApplication {
             System.out.println("First Class: " + issue.FirstClass() + "\n");
             System.out.println("Parameters: " + issue.Params() + "\n");
             System.out.println("Data: " + issue.getData() + "\n");
+            System.out.println(filePath.toString());
+            System.out.println(ARCHIVE_PATH);
+            Files.move(filePath, Paths.get(ARCHIVE_PATH + "\\" + fileName));
+
         }
         catch(ParserConfigurationException | SAXException | IOException e){
             e.printStackTrace();
