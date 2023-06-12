@@ -4,9 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import tuanv20.mockjiraapi.Model.Linechart;
 
-import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
+// import java.nio.file.Files; 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
@@ -25,10 +24,12 @@ import java.util.Date;
 @SpringBootApplication
 public class MockJiraApiApplication {
 	public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contact-gen";
-    public static final String ARCHIVE_PATH = "C:\\\\Users\\\\rebed\\\\Work\\\\mock-jira-api\\contacts";
+    public static final String ARCHIVE_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contacts";
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
     
 	public static void main (String[] args) throws IOException, InterruptedException {
+        ArchiveThread archThread = new ArchiveThread("Test Thread");
+        archThread.start();
 		WatchService fileWatcher = FileSystems.getDefault().newWatchService();
         //Absolute path to the directory being watched
         Path directory = Paths.get(ABS_PATH);
@@ -41,10 +42,11 @@ public class MockJiraApiApplication {
         WatchKey key;
         
         //Listen for events within the list of events returned by pollEvents()
-        while( (key= fileWatcher.take()) != null){
+        while( (key=fileWatcher.take()) != null){
             for ( WatchEvent<?> event: key.pollEvents()){
                 String filename = event.context().toString();
                 handleEvent(event, directory, filename);
+                // Files.move(directory.resolve( (Path) event.context()), Paths.get(ARCHIVE_PATH + "\\" + filename));
             }
             //Reset the key to tell it to block and continue to wait for events to take 
             key.reset();
@@ -149,9 +151,6 @@ public class MockJiraApiApplication {
             System.out.println("First Class: " + issue.FirstClass() + "\n");
             System.out.println("Parameters: " + issue.Params() + "\n");
             System.out.println("Data: " + issue.getData() + "\n");
-            System.out.println(filePath.toString());
-            System.out.println(ARCHIVE_PATH);
-            Files.move(filePath, Paths.get(ARCHIVE_PATH + "\\" + fileName));
 
         }
         catch(ParserConfigurationException | SAXException | IOException e){
