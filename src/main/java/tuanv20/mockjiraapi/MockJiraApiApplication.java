@@ -143,9 +143,9 @@ public class MockJiraApiApplication {
 
             //Insert visualization logic here 
             Linechart linechart = new Linechart(fileName.substring(0, fileName.lastIndexOf('.')) + ".png", issue);
-            linechart.createLineChart();
-            System.out.println("First Class: " + issue.getFirstClass() + "\n");
-            System.out.println("Parameters: " + issue.getParams() + "\n");
+            linechart.exportAsPng();
+            System.out.println("First Class: " + issue.FirstClass() + "\n");
+            System.out.println("Parameters: " + issue.Params() + "\n");
             System.out.println("Data: " + issue.getData() + "\n");
         }
         catch(ParserConfigurationException | SAXException | IOException e){

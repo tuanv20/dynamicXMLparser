@@ -1,25 +1,24 @@
 package tuanv20.mockjiraapi.Model;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Issue {
-    int id; 
-    long aos;
-    ArrayList<FirstClass> firstClassElems;
-    ArrayList<Param> params;
+    FirstClassMap firstClassElems;
+    HashMap<String, String> params;
     ArrayList<Data> data;
 
     public Issue(){
-        this.firstClassElems = new ArrayList<FirstClass>();
-        this.params = new ArrayList<Param>();
+        this.firstClassElems = new FirstClassMap();
+        this.params = new HashMap<String, String>();
         this.data = new ArrayList<Data>();
     }
     
     public void addParam(String name, String value){
-        this.params.add(new Param(name, value));
+        this.params.put(name, value);
     }
 
     public void addFirstClass(String name, String value){
-        this.firstClassElems.add(new FirstClass(name, value));
+        this.firstClassElems.add(name, value);
     }
 
     public void addDataPoint(ArrayList<String> vars){
@@ -27,11 +26,10 @@ public class Issue {
         this.data.add(new Data(dataPointVars));
     }
 
-    public ArrayList<FirstClass> getFirstClass(){
+    public FirstClassMap FirstClass(){
         return this.firstClassElems;
     }
-
-     public ArrayList<Param> getParams(){
+     public HashMap<String, String> Params(){
         return this.params;
     }
 
@@ -44,4 +42,50 @@ public class Issue {
         out = "[" + firstClassElems.toString() + ", " + params.toString() + ", " + data.toString() + "]"; 
         return out;
     }  
+
+    public static class FirstClassMap{
+        HashMap<String, String> map;
+
+        public FirstClassMap(){
+            map = new HashMap<String, String>();
+        }
+
+        public void add(String name, String value){
+            this.map.put(name, value);
+        }
+
+        public String getID(){
+            return map.get("ID");
+        }
+
+        public int getPN_H(){
+            return Integer.parseInt(map.get("PN_H"));
+        }
+
+        public String getMP(){
+            return map.get("MP");
+        }
+
+        public String getAntenna(){
+            return map.get("ANTENNA");
+        }
+
+        public Long getAOS(){
+            return Long.parseLong(map.get("AOS"));
+        }
+
+        public Long getLOS(){
+            return Long.parseLong(map.get("LOS"));
+        }
+
+        public String toString(){
+            String out = "[";
+            for(String key : map.keySet()){
+                out = out + key + ": " + map.get(key) + ", ";
+            }
+            out = out.substring(0, out.length() - 2);  
+            out += "]";
+            return out;
+        }
+    }
 }
