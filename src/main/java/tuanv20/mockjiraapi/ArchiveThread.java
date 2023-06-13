@@ -3,38 +3,44 @@ package tuanv20.mockjiraapi;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.util.Date;
 
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Io;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.lang.System;
 
+@Component
 class ArchiveThread implements Runnable {
     private Thread t;
     private String threadName;
-    public static final String ABS_DIR_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contact-gen";
-    public static final String ARCHIVE_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contacts";
-    public static final long ARCHIVE_CHECK_TIME_SEC = 5;
-    public static final long MARKED_AS_ARCHIVE_TIME_SEC = 30;
-   boolean main_thread_exit;
-   
-    ArchiveThread(String name) {
-        threadName = name;
+    @Value("${app.dir_path}")
+    private String ABS_DIR_PATH;
+    @Value("${app.arch_path}")
+    private String ARCHIVE_PATH;
+    @Value("${app.arch_check_time_sec}")
+    private long ARCHIVE_CHECK_TIME_SEC;
+    @Value("${app.mark_arch_time_sec}")
+    private long MARKED_AS_ARCHIVE_TIME_SEC;
+    boolean main_thread_exit;
+
+    public ArchiveThread(){
+        this.threadName = "Archive Thread";
         System.out.println("Creating " +  threadName );
         this.main_thread_exit = false;
+    }
 
+    ArchiveThread(String name) {
+        threadName = name;
     }
    
     public void run() {
         System.out.println("Running " +  threadName );
         try {
             while(main_thread_exit == false){
+                Thread.sleep(ARCHIVE_CHECK_TIME_SEC * 1000);
                 File path = new File(ABS_DIR_PATH);
                 File[] files = path.listFiles();
                 for(File file : files){
@@ -47,7 +53,6 @@ class ArchiveThread implements Runnable {
                     System.out.println("File moved");
                     }
                 }
-                Thread.sleep(ARCHIVE_CHECK_TIME_SEC * 1000);
             }
         } 
         catch (InterruptedException | IOException e) {

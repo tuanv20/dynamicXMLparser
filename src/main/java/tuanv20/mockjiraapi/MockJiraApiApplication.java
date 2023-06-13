@@ -1,11 +1,12 @@
 package tuanv20.mockjiraapi;
 import tuanv20.mockjiraapi.Model.Issue;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import tuanv20.mockjiraapi.Model.Linechart;
-
 import java.nio.file.FileSystems;
-// import java.nio.file.Files; 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
@@ -23,12 +24,15 @@ import java.util.Date;
 
 @SpringBootApplication
 public class MockJiraApiApplication {
-	public static final String ABS_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contact-gen";
-    public static final String ARCHIVE_PATH = "C:\\Users\\rebed\\Work\\mock-jira-api\\contacts";
+	public static String ABS_PATH;
+    public static String ARCHIVE_PATH;
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
     
 	public static void main (String[] args) throws IOException, InterruptedException {
-        ArchiveThread archThread = new ArchiveThread("Test Thread");
+        ConfigurableApplicationContext appContext = SpringApplication.run(MockJiraApiApplication.class, args);
+        ABS_PATH = appContext.getEnvironment().getProperty("app.dir_path");
+        ARCHIVE_PATH = appContext.getEnvironment().getProperty("app.arch_path");
+        ArchiveThread archThread = appContext.getBean(ArchiveThread.class);
         archThread.start();
 		WatchService fileWatcher = FileSystems.getDefault().newWatchService();
         //Absolute path to the directory being watched
@@ -46,12 +50,10 @@ public class MockJiraApiApplication {
             for ( WatchEvent<?> event: key.pollEvents()){
                 String filename = event.context().toString();
                 handleEvent(event, directory, filename);
-                // Files.move(directory.resolve( (Path) event.context()), Paths.get(ARCHIVE_PATH + "\\" + filename));
             }
             //Reset the key to tell it to block and continue to wait for events to take 
             key.reset();
         }
-		SpringApplication.run(MockJiraApiApplication.class, args);
 	}
 	public static void handleEvent(WatchEvent<?> event, Path directoryPath, String fileName) throws IOException{
         switch(event.kind().toString()){
