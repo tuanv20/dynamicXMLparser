@@ -41,12 +41,12 @@
       <TLM_FR>2507</TLM_FR>
       <CMD>6</CMD>
     </DATAPOINT> 
-    <DATAPOINT>
+    <!-- <DATAPOINT>
       <TIME>2023-06-17 14:30:56</TIME>
       <DELTA_AZ>0.2</DELTA_AZ>
       <DELTA_EL>9.1</DELTA_EL>
       <TLM_FR>3207</TLM_FR>
       <CMD>6</CMD>
-    </DATAPOINT>
+    </DATAPOINT> -->
   </DATA>
 </CONTACT>

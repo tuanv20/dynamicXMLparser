@@ -16,13 +16,13 @@ import java.lang.System;
 class ArchiveThread implements Runnable {
     private Thread t;
     private String threadName;
-    @Value("${app.dir_path}")
+    @Value("${paths.dir_path}")
     private String ABS_DIR_PATH;
-    @Value("${app.arch_path}")
+    @Value("${paths.arch_path}")
     private String ARCHIVE_PATH;
-    @Value("${app.arch_check_time_sec}")
+    @Value("${arch.refresh_sec}")
     private long ARCHIVE_CHECK_TIME_SEC;
-    @Value("${app.mark_arch_time_sec}")
+    @Value("${arch.mark_archive_time_sec}")
     private long MARKED_AS_ARCHIVE_TIME_SEC;
     boolean main_thread_exit;
 

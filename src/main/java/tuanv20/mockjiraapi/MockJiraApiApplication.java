@@ -30,8 +30,8 @@ public class MockJiraApiApplication {
     
 	public static void main (String[] args) throws IOException, InterruptedException {
         ConfigurableApplicationContext appContext = SpringApplication.run(MockJiraApiApplication.class, args);
-        ABS_PATH = appContext.getEnvironment().getProperty("app.dir_path");
-        ARCHIVE_PATH = appContext.getEnvironment().getProperty("app.arch_path");
+        ABS_PATH = appContext.getEnvironment().getProperty("paths.dir_path");
+        ARCHIVE_PATH = appContext.getEnvironment().getProperty("paths.arch_path");
         ArchiveThread archThread = appContext.getBean(ArchiveThread.class);
         archThread.start();
 		WatchService fileWatcher = FileSystems.getDefault().newWatchService();
