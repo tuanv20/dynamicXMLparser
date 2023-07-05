@@ -42,7 +42,7 @@ public class Data {
      public int getCmd(){
         return this.cmd;
     }
-
+    
     public void setTime(long time){
         this.time = time;
     }

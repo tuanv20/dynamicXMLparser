@@ -1,0 +1,37 @@
+<CONTACT project_id = "JIR" contact_id = "64F5D1B9">
+  <PN_H>8</PN_H>
+  <MP>TACO</MP>
+  <ANTENNA>DGS-B</ANTENNA>
+  <AOS>2023-07-17 14:30:00</AOS>
+  <LOS>2023-07-17 15:30:00</LOS>
+  <PARAMS>
+    <PARAM>
+      <NAME>H-EQUIP</NAME>
+      <VALUE>KS252-6 KS252-7 WS2_6901</VALUE>
+    </PARAM>
+    <PARAM>
+      <NAME>H-CONFIG</NAME>
+      <VALUE>D</VALUE>
+    </PARAM> 
+    <PARAM>
+      <NAME>L-CONFIG</NAME>
+      <VALUE>L</VALUE>
+    </PARAM>
+  </PARAMS>
+  <DATA>
+  <DATAPOINT>
+    <TIME>2023-07-17 14:30:00</TIME>
+    <DELTA_AZ>0.3</DELTA_AZ>
+    <DELTA_EL>10.4</DELTA_EL>
+    <TLM_FR>1420</TLM_FR>
+    <CMD>3</CMD>
+  </DATAPOINT>
+  <DATAPOINT>
+    <TIME>2023-07-17 14:30:06</TIME>
+    <DELTA_AZ>0.2</DELTA_AZ>
+    <DELTA_EL>9.1</DELTA_EL>
+    <TLM_FR>2207</TLM_FR>
+    <CMD>6</CMD>
+  </DATAPOINT>
+  </DATA>
+</CONTACT>

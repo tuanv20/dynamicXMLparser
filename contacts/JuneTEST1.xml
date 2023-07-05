@@ -1,5 +1,4 @@
-<CONTACT project_id = "TACO">
-  <ID>12B3C9A1</ID>
+<CONTACT project_id = "TEST1" contact_id ="742F3D9A5">
   <PN_H>8</PN_H>
   <MP>TACO</MP>
   <ANTENNA>DGS-A</ANTENNA>
@@ -41,12 +40,26 @@
       <TLM_FR>2507</TLM_FR>
       <CMD>6</CMD>
     </DATAPOINT> 
-    <!-- <DATAPOINT>
+    <DATAPOINT>
       <TIME>2023-06-17 14:30:56</TIME>
       <DELTA_AZ>0.2</DELTA_AZ>
       <DELTA_EL>9.1</DELTA_EL>
       <TLM_FR>3207</TLM_FR>
       <CMD>6</CMD>
-    </DATAPOINT> -->
+    </DATAPOINT>
   </DATA>
+  <EVENTS>
+    <EVENT>
+      <NAME>Test Event 1</NAME>
+    </EVENT>
+    <EVENT>
+      <NAME>Test Event 2</NAME>
+    </EVENT>
+    <EVENT>
+      <NAME>Test Event 2</NAME>
+    </EVENT>
+    <EVENT>
+      <NAME>Test Event 2</NAME>
+    </EVENT>
+  </EVENTS>
 </CONTACT>

@@ -1,0 +1,19 @@
+curl -H "Authorization: Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr" \
+-X GET \
+-H 'Accept: application/json' \
+'http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/project/JIR' | jq '.issueTypes[] | {id, name}'
+
+curl -H "Content-type: application/json" \
+-H "Authorization: Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr" \
+-X PUT \
+http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/JIR-78 -d '{"fields":{"description":"my new description"}}'
+
+curl -H "Content-type: application/json" \
+-H "Authorization: Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr" \
+-X GET \
+http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/JIR-19/properties/info
+
+curl -H "Content-type: application/json" \
+-H "Authorization: Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr" \
+-X GET \
+http://vmoc-proj1.nrl.navy.mil:8080/rest/screens
