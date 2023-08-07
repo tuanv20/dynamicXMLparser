@@ -18,6 +18,7 @@ import com.atlassian.jira.rest.client.api.domain.Issue;
 import com.atlassian.jira.rest.client.api.domain.SearchResult;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInput;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInputBuilder;
+import com.atlassian.jira.rest.client.api.domain.input.LinkIssuesInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import tuanv20.mockjiraapi.JIRALogger;
 import tuanv20.mockjiraapi.Model.JIRAIssue;
@@ -40,6 +41,7 @@ public class JiraController {
     private static JiraRestClient restClient = factory.create(URI.create("http://vmoc-proj1.nrl.navy.mil:8080"), JIRAHandler);
     private static IssueRestClient issueClient = restClient.getIssueClient();
     private static SearchRestClient searchClient = restClient.getSearchClient();
+    private static String mainJiraKey = "MAIN";
 
     @Autowired
     JIRALogger log;
@@ -64,18 +66,35 @@ public class JiraController {
         return issueClient.createIssue(newIssue).claim().getKey();
     }
 
-    public void updateIssue(JIRAIssue issue, String JIRAKey){
+    public void updateIssue(JIRAIssue issue, String JIRAKey, String mainIssueJiraKey){
         deleteAllAttachments(JIRAKey);
-        addAttachments(issue.getAttachmentsURI(), issue.getAttachments());
+        log.info(mainIssueJiraKey);
+        deleteAllAttachments(mainIssueJiraKey);
+        URI mainAttachmentsUri = getAttachmentsURI(mainIssueJiraKey);
+        addAttachments(issue.getAttachmentsURI(), mainAttachmentsUri, issue.getAttachments());
+        long issueTypeID = 10000;
+        IssueInputBuilder newIssueBuilder = new IssueInputBuilder(issue.getProjKey(), issueTypeID, "Contact " + issue.getID());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("AOS"), issue.getFirstClass().getAOSCustom());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("LOS"), issue.getFirstClass().getLOSCustom());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Antenna"), issue.getFirstClass().getAntenna());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("PN-H"), issue.getFirstClass().getPN_H());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("MP"), issue.getFirstClass().getMP());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-EQUIP"), issue.getParams().getHEQUIP());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-CONFIG"), issue.getParams().getHCONFIG());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("L-CONFIG"), issue.getParams().getLCONFIG());
+        IssueInput newIssue = newIssueBuilder.build();
+        issueClient.updateIssue(JIRAKey, newIssue);
+        addDescription(JIRAKey, issue.eventDescription());
     }
 
     public URI getAttachmentsURI(String issue_ID){
         return issueClient.getIssue(issue_ID).claim().getAttachmentsUri();
     }
 
-    public void addAttachments(URI attachmentURI, ArrayList<File> attachments){
+    public void addAttachments(URI linkedAttachmentURI, URI mainAttachmentURI, ArrayList<File> attachments){
         for(File attachment : attachments){
-            issueClient.addAttachments(attachmentURI, attachment);
+            issueClient.addAttachments(linkedAttachmentURI, attachment);
+            issueClient.addAttachments(mainAttachmentURI, attachment);
             attachment.delete();
         }
     }
@@ -101,6 +120,7 @@ public class JiraController {
 
     public void deleteAllAttachments(String issue_ID) {
         try{
+            System.out.println(issue_ID);
             ArrayList<String> attachmentIDs = this.getAttachmentIds(issue_ID);
             for(String attachmentID: attachmentIDs){
                 deleteAttachment(attachmentID);
@@ -169,9 +189,9 @@ public class JiraController {
         }
     }
 
-    public void addDescription(String issue_ID, String desc){
+    public void addDescription(String issueKey, String descString){
         try{
-        URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/" + issue_ID);
+        URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/" + issueKey);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setRequestMethod("PUT");
 
@@ -180,7 +200,7 @@ public class JiraController {
 
         httpConn.setDoOutput(true);
         OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
-        writer.write("{\"fields\":{\"description\":" + "\"" + desc + "\"}}");
+        writer.write("{\"fields\":{\"description\":" + "\"" + descString + "\"}}");
         writer.flush();
         writer.close();
         httpConn.getOutputStream().close();
@@ -200,6 +220,27 @@ public class JiraController {
         }
         issueClient.deleteIssue(delIssue.getKey(), true);
     }
+
+    public String createMainIssue(JIRAIssue issue, String filename){
+        long issueTypeID = 10000;
+        IssueInputBuilder newIssueBuilder = new IssueInputBuilder(mainJiraKey, issueTypeID, "Contact " + issue.getID());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Filename"), filename);
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("AOS"), issue.getFirstClass().getAOSCustom());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("LOS"), issue.getFirstClass().getLOSCustom());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Antenna"), issue.getFirstClass().getAntenna());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("PN-H"), issue.getFirstClass().getPN_H());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("MP"), issue.getFirstClass().getMP());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-EQUIP"), issue.getParams().getHEQUIP());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-CONFIG"), issue.getParams().getHCONFIG());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("L-CONFIG"), issue.getParams().getLCONFIG());
+        IssueInput newIssue = newIssueBuilder.build();
+        return issueClient.createIssue(newIssue).claim().getKey();
+    }
+
+    public void linkIssues(String mainIssueKey, String linkedIssueKey){
+        LinkIssuesInput linkInput = new LinkIssuesInput(mainIssueKey, linkedIssueKey, "Duplicate");
+        issueClient.linkIssue(linkInput);    
+        }
 
     // public void archiveIssueByFileName(String filename){
     // Iterable<Issue> issues = searchClient.searchJql("Filename ~" + filename).claim().getIssues();

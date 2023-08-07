@@ -33,5 +33,12 @@
     <TLM_FR>2207</TLM_FR>
     <CMD>6</CMD>
   </DATAPOINT>
+  <!-- <DATAPOINT>
+    <TIME>2023-07-17 14:30:06</TIME>
+    <DELTA_AZ>0.2</DELTA_AZ>
+    <DELTA_EL>9.1</DELTA_EL>
+    <TLM_FR>2207</TLM_FR>
+    <CMD>6</CMD>
+  </DATAPOINT> -->
   </DATA>
 </CONTACT>

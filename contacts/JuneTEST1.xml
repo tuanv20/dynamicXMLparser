@@ -1,7 +1,7 @@
 <CONTACT project_id = "TEST1" contact_id ="742F3D9A5">
   <PN_H>8</PN_H>
   <MP>TACO</MP>
-  <ANTENNA>DGS-A</ANTENNA>
+  <ANTENNA>DGS-B</ANTENNA>
   <AOS>2023-06-17 14:30:00</AOS>
   <LOS>2023-06-17 15:30:00</LOS>
   <PARAMS>
@@ -56,10 +56,10 @@
       <NAME>Test Event 2</NAME>
     </EVENT>
     <EVENT>
-      <NAME>Test Event 2</NAME>
+      <NAME>Test Event 3</NAME>
     </EVENT>
     <EVENT>
-      <NAME>Test Event 2</NAME>
+      <NAME>Test Event 4</NAME>
     </EVENT>
   </EVENTS>
 </CONTACT>

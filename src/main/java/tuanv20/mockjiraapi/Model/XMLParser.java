@@ -129,7 +129,6 @@ public class XMLParser {
                 }
 
 
-            
             //First-class data element 
             default:    
                 String value = node.getNodeName() == "AOS" | node.getNodeName() == "LOS" ? Long.toString(dateToEpoch(node.getTextContent())) : node.getTextContent();

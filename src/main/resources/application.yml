@@ -3,12 +3,12 @@ spring:
     web-application-type: none
 
 paths:
-  # dir_path: /home/atran/Work/mock-jira-api/contact-gen
-  # arch_path: /home/atran/Work/mock-jira-api/contacts
-  # img_path: /home/atran/Work/mock-jira-api/contact-png
-  dir_path: /app/contact-gen
-  arch_path: /app/contacts
-  img_path: /app/contact-png
+  dir_path: /home/atran/Work/mock-jira-api/contact-gen
+  arch_path: /home/atran/Work/mock-jira-api/contacts
+  img_path: /home/atran/Work/mock-jira-api/contact-png
+  # dir_path: /app/contact-gen
+  # arch_path: /app/contacts
+  # img_path: /app/contact-png
 
 arch: 
   refresh_sec: 5

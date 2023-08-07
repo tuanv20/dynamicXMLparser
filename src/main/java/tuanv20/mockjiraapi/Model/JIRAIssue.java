@@ -3,7 +3,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import tuanv20.mockjiraapi.Controller.JiraController;
+import tuanv20.mockjiraapi.JIRALogger;
 
 public class JIRAIssue {
     JiraController JiraREST = new JiraController();
@@ -11,10 +15,14 @@ public class JIRAIssue {
     Param params;
     ArrayList<Data> data;
     ArrayList<String> events;
+    String mainIssueJiraKey;
     String JIRAKey;
     String projKey;
     String id;
     ArrayList<File> attachments;
+
+    @Autowired
+    JIRALogger log;
 
     public JIRAIssue(){
         this.firstClassElems = new FirstClass();
@@ -49,14 +57,19 @@ public class JIRAIssue {
     }
 
     public String createJIRAIssue(JIRAIssue issue, String filename){
+        this.mainIssueJiraKey = JiraREST.createMainIssue(issue, filename);
         this.JIRAKey = JiraREST.createIssue(issue, filename);
-        JiraREST.addAttachments(this.getAttachmentsURI(), getAttachments());
-        JiraREST.addDescription(this.getJIRAKey(), this.eventDescription());
+        JiraREST.linkIssues(this.JIRAKey, this.mainIssueJiraKey);
+        URI mainAttachmentsURI = JiraREST.getAttachmentsURI(this.mainIssueJiraKey);
+        JiraREST.addAttachments(this.getAttachmentsURI(), mainAttachmentsURI, getAttachments());
+        JiraREST.addDescription(this.mainIssueJiraKey, this.eventDescription());
+        JiraREST.addDescription(this.JIRAKey, this.eventDescription());
         return this.JIRAKey;
     }
 
     public void updateJIRAIssue(String JIRAKey) throws IOException{
-        JiraREST.updateIssue(this, JIRAKey);
+        System.out.println(this.mainIssueJiraKey);
+        JiraREST.updateIssue(this, JIRAKey, this.mainIssueJiraKey);
     }
 
     public void addAttachment(File attachment){

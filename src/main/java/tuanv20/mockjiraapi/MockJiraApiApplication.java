@@ -58,9 +58,9 @@ public class MockJiraApiApplication {
             case "ENTRY_MODIFY":
                 modifyEvent(directoryPath.resolve( (Path) event.context()), fileName);
                 break;
-            case "ENTRY_DELETE":
-                //deleteEvent(fileName);
-                break;
+            // case "ENTRY_DELETE":
+            //     deleteEvent(fileName);
+            //     break;
             case "ENTRY_CREATE":
                 modifyEvent(directoryPath.resolve( (Path) event.context()), fileName);
                 break;
