@@ -58,6 +58,7 @@ public class JIRAIssue {
 
     public String createJIRAIssue(JIRAIssue issue, String filename){
         this.mainIssueJiraKey = JiraREST.createMainIssue(issue, filename);
+        JiraREST.addLabel(this.mainIssueJiraKey, this.projKey);
         this.JIRAKey = JiraREST.createIssue(issue, filename);
         JiraREST.linkIssues(this.JIRAKey, this.mainIssueJiraKey);
         URI mainAttachmentsURI = JiraREST.getAttachmentsURI(this.mainIssueJiraKey);
@@ -113,8 +114,9 @@ public class JIRAIssue {
 
     public String eventDescription(){
         StringBuilder descBuilder = new StringBuilder();
+        descBuilder.append("||Event Name||Event Date||\\n");
         for(Event event : this.events){
-            descBuilder.append(event.toString() + "\\n");
+            descBuilder.append("|" + event.getName() + "|" + event.getDate() + "|\\n");
         }
         return descBuilder.toString();
     }

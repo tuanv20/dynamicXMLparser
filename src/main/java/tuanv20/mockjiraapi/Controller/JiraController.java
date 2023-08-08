@@ -204,6 +204,29 @@ public class JiraController {
         }
     }
 
+    public void addLabel(String issueKey, String label){
+        try{
+        URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/" + issueKey);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setRequestMethod("PUT");
+
+        httpConn.setRequestProperty("Content-type", "application/json");
+        httpConn.setRequestProperty("Authorization", "Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr");
+
+        httpConn.setDoOutput(true);
+        OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
+        writer.write("{\"update\":{\"labels\":" + "[{\"add\": " + "\"" + label + "\"}]}}");
+        writer.flush();
+        writer.close();
+        httpConn.getOutputStream().close();
+        httpConn.getResponseCode();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            System.err.println("Error adding description");
+        }
+    }
+
     public void deleteIssueByFileName(String filename){
         Iterable<Issue> issues = searchClient.searchJql("Filename ~ " + filename).claim().getIssues();
         Issue delIssue = null;
@@ -233,12 +256,4 @@ public class JiraController {
         LinkIssuesInput linkInput = new LinkIssuesInput(mainIssueKey, linkedIssueKey, "Duplicate");
         issueClient.linkIssue(linkInput);    
         }
-
-    // public void archiveIssueByFileName(String filename){
-    // Iterable<Issue> issues = searchClient.searchJql("Filename ~" + filename).claim().getIssues();
-    // Issue archIssue = null;
-    // for(Issue issue : issues){
-        
-    // }
-    // }
 }

@@ -38,7 +38,7 @@
     <DELTA_AZ>0.2</DELTA_AZ>
     <DELTA_EL>9.1</DELTA_EL>
     <TLM_FR>2207</TLM_FR>
-    <CMD>6</CMD>
+    <CMD>9</CMD>
   </DATAPOINT>
   </DATA>
 </CONTACT>

@@ -5,29 +5,20 @@ import java.util.Date;
 
 public class Event {
     String name; 
-    Long time; 
+    Long date; 
 
-    public Event(String name, Long time){
+    public Event(String name, Long date){
         this.name = name;
-        this.time = time; 
+        this.date = date; 
     }
 
     public String getName(){
         return this.name;
     }
 
-    public Long getTime(){
-        return this.time;
-    }
-
-    public String toString(){
-        StringBuilder eventBuilder = new StringBuilder();
-        eventBuilder.append(this.name);
-        eventBuilder.append(" -- ");
-        Date eventDate = new Date(this.time);
+    public String getDate(){
+        Date eventDate = new Date(this.date);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        eventBuilder.append(df.format(eventDate));
-        return eventBuilder.toString();
+        return df.format(eventDate);
     }
-
 }
