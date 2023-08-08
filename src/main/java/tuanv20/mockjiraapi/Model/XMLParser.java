@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
+
+import com.atlassian.jira.rest.client.api.domain.Issue;
+
 import tuanv20.mockjiraapi.JIRALogger;
 import tuanv20.mockjiraapi.Controller.JiraController;
 
@@ -68,14 +71,27 @@ public class XMLParser {
             File tlm_fr_attachment = linechart.exportAsPng(fileName.substring(0, fileName.lastIndexOf('.')) + ".png");
             issue.addAttachment(tlm_fr_attachment);
             //Searches for issue JIRA key by Contact ID of issue; returns null if it doesn't exist 
-            String JIRAKey = JIRAController.getIssueKeyByContactID(issue.getID());
-            if(JIRAKey == null){
+            Iterable<Issue> matchedIssues = JIRAController.getIssueKeyByContactID(issue.getID());
+            if(matchedIssues.iterator().hasNext() == false){
                 String issueKey = issue.createJIRAIssue(issue, fileName);
                 log.info("Successfully Created JIRA issue: " + issueKey);
             }
             else{
+                int index = 1;
+                String JIRAKey = null; 
+                String mainIssueKey = null; 
+                for(Issue matchIssue: matchedIssues){
+                    if(index == 1){
+                        JIRAKey = matchIssue.getKey();
+                    }
+                    else{
+                        mainIssueKey = matchIssue.getKey();
+                    }
+                    index++;
+                }
                 issue.setJIRAKey(JIRAKey);
-                issue.updateJIRAIssue(JIRAKey);
+                issue.setMainIssueKey(mainIssueKey);
+                issue.updateJIRAIssue(JIRAKey, mainIssueKey);
                 log.info("Successfully Updated JIRA issue: " + JIRAKey);
             }
         }
@@ -124,10 +140,10 @@ public class XMLParser {
                 NodeList eventList = doc.getElementsByTagName("EVENT");
                 for(int i = 0; i < eventList.getLength(); i++){
                     Element eventElem = (Element) eventList.item(i);
-                    String event = eventElem.getElementsByTagName("NAME").item(0).getTextContent();
-                    issue.getEvents().add(event);
+                    String eventName = eventElem.getElementsByTagName("NAME").item(0).getTextContent();
+                    Long eventTime = dateToEpoch(eventElem.getElementsByTagName("TIME").item(0).getTextContent());
+                    issue.getEvents().add(new Event(eventName, eventTime));
                 }
-
 
             //First-class data element 
             default:    

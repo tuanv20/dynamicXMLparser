@@ -68,7 +68,6 @@ public class JiraController {
 
     public void updateIssue(JIRAIssue issue, String JIRAKey, String mainIssueJiraKey){
         deleteAllAttachments(JIRAKey);
-        log.info(mainIssueJiraKey);
         deleteAllAttachments(mainIssueJiraKey);
         URI mainAttachmentsUri = getAttachmentsURI(mainIssueJiraKey);
         addAttachments(issue.getAttachmentsURI(), mainAttachmentsUri, issue.getAttachments());
@@ -138,16 +137,9 @@ public class JiraController {
         return exists;
     }
 
-    public String getIssueKeyByContactID(String contactID){
+    public Iterable<Issue> getIssueKeyByContactID(String contactID){
         Iterable<Issue> issues = searchClient.searchJql("summary ~ " + contactID).claim().getIssues();
-        Issue matchIssue = null;
-        for(Issue issue : issues){
-            matchIssue = issue;
-        }
-        if(matchIssue == null){
-            return null;
-        }
-        return matchIssue.getKey();
+        return issues;
     }
 
     public void addFilenameProperty(String issue_ID, String fileName) {

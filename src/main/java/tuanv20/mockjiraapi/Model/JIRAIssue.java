@@ -14,7 +14,7 @@ public class JIRAIssue {
     FirstClass firstClassElems;
     Param params;
     ArrayList<Data> data;
-    ArrayList<String> events;
+    ArrayList<Event> events;
     String mainIssueJiraKey;
     String JIRAKey;
     String projKey;
@@ -29,7 +29,7 @@ public class JIRAIssue {
         this.params = new Param();
         this.data = new ArrayList<Data>();
         this.attachments = new ArrayList<File>();
-        this.events = new ArrayList<String>();
+        this.events = new ArrayList<Event>();
     }
 
     public JIRAIssue(String JIRAKey){
@@ -67,9 +67,8 @@ public class JIRAIssue {
         return this.JIRAKey;
     }
 
-    public void updateJIRAIssue(String JIRAKey) throws IOException{
-        System.out.println(this.mainIssueJiraKey);
-        JiraREST.updateIssue(this, JIRAKey, this.mainIssueJiraKey);
+    public void updateJIRAIssue(String JIRAKey, String mainIssueJiraKey) throws IOException{
+        JiraREST.updateIssue(this, JIRAKey, mainIssueJiraKey);
     }
 
     public void addAttachment(File attachment){
@@ -83,6 +82,10 @@ public class JIRAIssue {
 
     public void setJIRAKey(String JIRAKey){
         this.JIRAKey = JIRAKey;
+    }
+
+    public void setMainIssueKey(String mainIssueJiraKey){
+        this.mainIssueJiraKey = mainIssueJiraKey;
     }
 
     public void setProjKey(String projKey){
@@ -104,14 +107,14 @@ public class JIRAIssue {
         return this.data;
     }
 
-    public ArrayList<String> getEvents(){
+    public ArrayList<Event> getEvents(){
         return this.events;
     }
 
     public String eventDescription(){
         StringBuilder descBuilder = new StringBuilder();
-        for(String event : this.events){
-            descBuilder.append(event + "\\n");
+        for(Event event : this.events){
+            descBuilder.append(event.toString() + "\\n");
         }
         return descBuilder.toString();
     }

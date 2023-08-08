@@ -51,15 +51,19 @@
   <EVENTS>
     <EVENT>
       <NAME>Test Event 1</NAME>
+      <TIME>2023-06-17 14:30:56</TIME>
     </EVENT>
     <EVENT>
       <NAME>Test Event 2</NAME>
+      <TIME>2023-06-17 14:30:56</TIME>
     </EVENT>
     <EVENT>
       <NAME>Test Event 3</NAME>
+      <TIME>2023-06-17 14:30:56</TIME>
     </EVENT>
     <EVENT>
       <NAME>Test Event 4</NAME>
+      <TIME>2023-06-17 14:30:56</TIME>
     </EVENT>
   </EVENTS>
 </CONTACT>
