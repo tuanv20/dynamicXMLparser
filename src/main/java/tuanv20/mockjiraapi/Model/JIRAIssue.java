@@ -3,14 +3,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import tuanv20.mockjiraapi.Controller.JiraController;
 import tuanv20.mockjiraapi.JIRALogger;
 
 public class JIRAIssue {
-    JiraController JiraREST = new JiraController();
+    JiraController JiraREST;
     FirstClass firstClassElems;
     Param params;
     ArrayList<Data> data;
@@ -24,12 +22,13 @@ public class JIRAIssue {
     @Autowired
     JIRALogger log;
 
-    public JIRAIssue(){
+    public JIRAIssue(JiraController JiraREST){
         this.firstClassElems = new FirstClass();
         this.params = new Param();
         this.data = new ArrayList<Data>();
         this.attachments = new ArrayList<File>();
         this.events = new ArrayList<Event>();
+        this.JiraREST = JiraREST;
     }
 
     public JIRAIssue(String JIRAKey){
@@ -114,9 +113,11 @@ public class JIRAIssue {
 
     public String eventDescription(){
         StringBuilder descBuilder = new StringBuilder();
-        descBuilder.append("||Event Name||Event Date||\\n");
-        for(Event event : this.events){
-            descBuilder.append("|" + event.getName() + "|" + event.getDate() + "|\\n");
+        if(this.events.iterator().hasNext()){
+            descBuilder.append("||Event Name||Event Date||\\n");
+            for(Event event : this.events){
+                descBuilder.append("|" + event.getName() + "|" + event.getDate() + "|\\n");
+            }
         }
         return descBuilder.toString();
     }

@@ -12,15 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
-
 import com.atlassian.jira.rest.client.api.domain.Issue;
-
 import tuanv20.mockjiraapi.JIRALogger;
 import tuanv20.mockjiraapi.Controller.JiraController;
 
 @Component
 public class XMLParser {
-    private static JiraController JIRAController = new JiraController();
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
 
     @Value("${paths.img_path}")
@@ -45,7 +42,7 @@ public class XMLParser {
     * @param  fileName              Name of the file that was modified 
     *
     **/
-    public void parseXML(JIRAIssue issue, Path filePath, String fileName){
+    public void parseXML(JIRAIssue issue, Path filePath, String fileName, JiraController JIRAController){
         try{
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

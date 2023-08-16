@@ -11,9 +11,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.WatchService; 
 import java.util.Date;
 import java.io.*;
+
 
 @SpringBootApplication
 public class MockJiraApiApplication {
@@ -23,20 +24,16 @@ public class MockJiraApiApplication {
     public static ArchiveThread archThread;
     public static JiraController JIRAController;
     public static XMLParser parser;
+    public static ConfigurableApplicationContext appContext;
     
 	public static void main (String[] args) throws IOException, InterruptedException {
-        ConfigurableApplicationContext appContext = SpringApplication.run(MockJiraApiApplication.class, args);
+        appContext = SpringApplication.run(MockJiraApiApplication.class, args);
         ABS_PATH = appContext.getEnvironment().getProperty("paths.dir_path");
         ARCHIVE_PATH = appContext.getEnvironment().getProperty("paths.arch_path");
         ARCHIVE_TIME = Long.parseLong(appContext.getEnvironment().getProperty("arch.mark_archive_time_sec"));
         archThread = appContext.getBean(ArchiveThread.class);     
         parser = appContext.getBean(XMLParser.class);
         JIRAController = appContext.getBean(JiraController.class); 
-        //JIRAController.deleteAllIssues();
-        //JIRAController.getAllFields();
-        // for(Issue issue: JIRAController.getAllIssues()){
-        //     System.out.println(issue.toString());
-        // }
         archThread.start();
         //loadDirectory(ABS_PATH);
 		WatchService fileWatcher = FileSystems.getDefault().newWatchService();
@@ -58,9 +55,9 @@ public class MockJiraApiApplication {
             case "ENTRY_MODIFY":
                 modifyEvent(directoryPath.resolve( (Path) event.context()), fileName);
                 break;
-            // case "ENTRY_DELETE":
-            //     deleteEvent(fileName);
-            //     break;
+            case "ENTRY_DELETE":
+                //deleteEvent(fileName);
+                break;
             case "ENTRY_CREATE":
                 modifyEvent(directoryPath.resolve( (Path) event.context()), fileName);
                 break;
@@ -100,10 +97,10 @@ public class MockJiraApiApplication {
         Date last_modified_date = new Date(filePath.toFile().lastModified());
         Date curr_date = new Date();
         long millis_since_last_modification = curr_date.getTime() - last_modified_date.getTime();
-        //If the file's modification time is not within the archival range, process it 
+        //Only process files that have not been marked as archivable
         if(millis_since_last_modification < (ARCHIVE_TIME * 1000)){
-            JIRAIssue issue = new JIRAIssue();
-            parser.parseXML(issue, filePath, fileName);
+            JIRAIssue issue = new JIRAIssue(JIRAController);
+            parser.parseXML(issue, filePath, fileName, JIRAController);
         }
     }
 

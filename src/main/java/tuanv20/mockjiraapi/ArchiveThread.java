@@ -33,22 +33,19 @@ class ArchiveThread implements Runnable {
     }
 
     public void archiveDirectory() {
-        log.info("Archiving Started");
         try {
             File path = new File(ABS_DIR_PATH);
             File[] files = path.listFiles();
             for(File file : files){
                 Date last_modified_date = new Date(file.lastModified());
                 Date curr_date = new Date();
-                log.info(Long.toString(curr_date.getTime()));
                 long millis_since_last_modification = curr_date.getTime() - last_modified_date.getTime();
-                log.info(file.getName() + ": " + Long.toString(millis_since_last_modification) + "ms");
+                //log.info(file.getName() + ": " + Long.toString(millis_since_last_modification) + "ms");
                 if(millis_since_last_modification > (MARKED_AS_ARCHIVE_TIME_SEC * 1000)){
                     Files.move(file.toPath(), Paths.get(ARCHIVE_PATH + "/" + file.getName()));
                     log.warn("Archiving file: " + file.getName());
                 }
             }
-        log.info("Archiving Completed");
         }
         catch(Exception e){
             e.printStackTrace();

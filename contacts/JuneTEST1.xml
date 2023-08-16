@@ -50,20 +50,20 @@
   </DATA>
   <EVENTS>
     <EVENT>
-      <NAME>Test Event 1</NAME>
-      <TIME>2023-06-17 14:30:56</TIME>
+      <NAME>Acquisition of Service</NAME>
+      <TIME>2023-06-17 14:30:00</TIME>
     </EVENT>
     <EVENT>
-      <NAME>Test Event 2</NAME>
-      <TIME>2023-06-17 14:30:56</TIME>
+      <NAME>Peak TLM_FR</NAME>
+      <TIME>2023-06-17 14:37:54</TIME>
     </EVENT>
     <EVENT>
-      <NAME>Test Event 3</NAME>
-      <TIME>2023-06-17 14:30:56</TIME>
+      <NAME>Misalignment</NAME>
+      <TIME>2023-06-17 14:45:56</TIME>
     </EVENT>
     <EVENT>
-      <NAME>Test Event 4</NAME>
-      <TIME>2023-06-17 14:30:56</TIME>
+      <NAME>Loss of Service</NAME>
+      <TIME>2023-06-17 15:30:00</TIME>
     </EVENT>
   </EVENTS>
 </CONTACT>

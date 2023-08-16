@@ -1,9 +1,9 @@
-<CONTACT project_id = "JIR" contact_id = "12B3C9A1">
+<CONTACT project_id = "TEST1" contact_id ="82HDO10L">
   <PN_H>8</PN_H>
   <MP>TACO</MP>
   <ANTENNA>DGS-A</ANTENNA>
-  <AOS>2023-06-17 14:30:00</AOS>
-  <LOS>2023-06-17 15:30:00</LOS>
+  <AOS>2023-07-17 14:30:00</AOS>
+  <LOS>2023-07-17 15:30:00</LOS>
   <PARAMS>
     <PARAM>
       <NAME>H-EQUIP</NAME>
@@ -20,32 +20,36 @@
   </PARAMS>
   <DATA>
     <DATAPOINT>
-      <TIME>2023-06-17 14:30:00</TIME>
+      <TIME>2023-07-17 14:30:00</TIME>
       <DELTA_AZ>0.3</DELTA_AZ>
       <DELTA_EL>10.4</DELTA_EL>
       <TLM_FR>1420</TLM_FR>
       <CMD>3</CMD>
     </DATAPOINT>
     <DATAPOINT>
-      <TIME>2023-06-17 14:30:06</TIME>
+      <TIME>2023-07-17 14:30:06</TIME>
       <DELTA_AZ>0.2</DELTA_AZ>
       <DELTA_EL>9.1</DELTA_EL>
       <TLM_FR>2207</TLM_FR>
       <CMD>6</CMD>
     </DATAPOINT>
-    <DATAPOINT>
-      <TIME>2023-06-17 14:30:36</TIME>
-      <DELTA_AZ>0.2</DELTA_AZ>
-      <DELTA_EL>9.1</DELTA_EL>
-      <TLM_FR>2507</TLM_FR>
-      <CMD>6</CMD>
-    </DATAPOINT> 
-    <!-- <DATAPOINT>
-      <TIME>2023-06-17 14:30:56</TIME>
-      <DELTA_AZ>0.2</DELTA_AZ>
-      <DELTA_EL>9.1</DELTA_EL>
-      <TLM_FR>3207</TLM_FR>
-      <CMD>6</CMD>
-    </DATAPOINT> -->
   </DATA>
+  <EVENTS>
+    <EVENT>
+      <NAME>Acquisition of Service</NAME>
+      <TIME>2023-06-17 14:30:00</TIME>
+    </EVENT>
+    <EVENT>
+      <NAME>Peak TLM_FR</NAME>
+      <TIME>2023-06-17 14:37:54</TIME>
+    </EVENT>
+    <EVENT>
+      <NAME>Misalignment</NAME>
+      <TIME>2023-06-17 14:45:56</TIME>
+    </EVENT>
+    <EVENT>
+      <NAME>Loss of Service</NAME>
+      <TIME>2023-06-17 15:30:00</TIME>
+    </EVENT>
+  </EVENTS>
 </CONTACT>

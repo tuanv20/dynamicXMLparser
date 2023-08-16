@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
 import com.atlassian.jira.rest.client.api.IssueRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
@@ -36,15 +37,27 @@ public class JiraController {
         "H-CONFIG", "customfield_10112",
         "L-CONFIG", "customfield_10113"
     );
-    private static BearerHttpAuthenticationHandler JIRAHandler = new BearerHttpAuthenticationHandler();
-    private static JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
-    private static JiraRestClient restClient = factory.create(URI.create("http://vmoc-proj1.nrl.navy.mil:8080"), JIRAHandler);
-    private static IssueRestClient issueClient = restClient.getIssueClient();
-    private static SearchRestClient searchClient = restClient.getSearchClient();
-    private static String mainJiraKey = "MAIN";
+    @Value("${jira.url}")
+    private String JIRA_URL;
+    @Value("${jira.auth}")
+    private String AUTH_HEADER;
+    @Value("${jira.main_proj_key}")
+    private String mainJiraKey;
+    private BearerHttpAuthenticationHandler JIRAHandler = new BearerHttpAuthenticationHandler();
+    private JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
+    private JiraRestClient restClient;
+    private IssueRestClient issueClient;
+    private SearchRestClient searchClient;
 
     @Autowired
     JIRALogger log;
+
+    @Autowired
+    public JiraController(@Value("${jira.url}") String url){
+        this.restClient = factory.create(URI.create(url), JIRAHandler);
+        this.issueClient = restClient.getIssueClient();
+        this.searchClient = restClient.getSearchClient();
+    }
 
     public String getIssue(String issue_ID){
         return issueClient.getIssue(issue_ID).claim().toString();
@@ -99,10 +112,10 @@ public class JiraController {
     }
 
     public void deleteAttachment(String attachmentID) throws IOException{
-        URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/attachment/" + attachmentID);
+        URL url = new URL(JIRA_URL + "/rest/api/2/attachment/" + attachmentID);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setRequestMethod("DELETE");
-        httpConn.setRequestProperty("Authorization", "Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr");
+        httpConn.setRequestProperty("Authorization", AUTH_HEADER);
         httpConn.setRequestProperty("Accept", "application/json");
         httpConn.getResponseCode();
     }
@@ -144,11 +157,11 @@ public class JiraController {
 
     public void addFilenameProperty(String issue_ID, String fileName) {
         try{
-        URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/" + issue_ID + "/properties/info");
+        URL url = new URL(JIRA_URL + "/rest/api/2/issue/" + issue_ID + "/properties/info");
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setRequestMethod("PUT");
         httpConn.setRequestProperty("Content-type", "application/json");
-        httpConn.setRequestProperty("Authorization", "Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr");
+        httpConn.setRequestProperty("Authorization", AUTH_HEADER);
         httpConn.setDoOutput(true);
         OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
         writer.write("{\"Name\": " + "\"" + fileName + "\"}");
@@ -183,12 +196,12 @@ public class JiraController {
 
     public void addDescription(String issueKey, String descString){
         try{
-        URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/" + issueKey);
+        URL url = new URL(JIRA_URL + "/rest/api/2/issue/" + issueKey);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setRequestMethod("PUT");
 
         httpConn.setRequestProperty("Content-type", "application/json");
-        httpConn.setRequestProperty("Authorization", "Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr");
+        httpConn.setRequestProperty("Authorization", AUTH_HEADER);
 
         httpConn.setDoOutput(true);
         OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
@@ -206,12 +219,12 @@ public class JiraController {
 
     public void addLabel(String issueKey, String label){
         try{
-        URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/" + issueKey);
+        URL url = new URL(JIRA_URL + "/rest/api/2/issue/" + issueKey);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setRequestMethod("PUT");
 
         httpConn.setRequestProperty("Content-type", "application/json");
-        httpConn.setRequestProperty("Authorization", "Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr");
+        httpConn.setRequestProperty("Authorization", AUTH_HEADER);
 
         httpConn.setDoOutput(true);
         OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
