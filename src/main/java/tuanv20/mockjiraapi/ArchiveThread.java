@@ -9,6 +9,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+/** Thread that archives unmodified XMLs
+ * ABS_DIR_PATH - Absolute path to contact-gen directory
+ * ARCHIVE_PATH - Absolute path to archive directory
+ * ARCHIVE_CHECK_TIME_SEC - How frequently archival occurs (sec)
+ * MARKED_AS_ARCHIVE_TIME_SEC - When a file is marked as archived (sec)
+*/
 class ArchiveThread implements Runnable {
     private static Thread t;
     private String threadName;
@@ -32,6 +38,11 @@ class ArchiveThread implements Runnable {
         threadName = name;
     }
 
+    /** Iterates through the contact-gen directory
+     *  and compares the current time to the last 
+     *  modified time of the XML file. Archives 
+     *  any files that fall within the archival timeframe. 
+    */
     public void archiveDirectory() {
         try {
             File path = new File(ABS_DIR_PATH);

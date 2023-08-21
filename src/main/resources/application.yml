@@ -15,7 +15,7 @@ paths:
 
 arch: 
   refresh_sec: 5
-  mark_archive_time_sec: 60
+  mark_archive_time_sec: 600
 
 jira:
   url: http://vmoc-proj1.nrl.navy.mil:8080

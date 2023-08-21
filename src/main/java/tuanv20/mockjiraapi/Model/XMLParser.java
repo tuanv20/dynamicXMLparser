@@ -17,6 +17,10 @@ import tuanv20.mockjiraapi.JIRALogger;
 import tuanv20.mockjiraapi.Controller.JiraController;
 
 @Component
+/** Parses the XML file and creates the JIRA issues
+ * Linechart object - visualization creation
+ * JIRALogger - Springboot logs 
+*/
 public class XMLParser {
     public static final String[] dataTags = {"TIME", "DELTA_AZ", "DELTA_EL", "TLM_FR", "CMD"};
 
@@ -71,7 +75,6 @@ public class XMLParser {
             Iterable<Issue> matchedIssues = JIRAController.getIssueKeyByContactID(issue.getID());
             if(matchedIssues.iterator().hasNext() == false){
                 String issueKey = issue.createJIRAIssue(issue, fileName);
-                log.info("Successfully Created JIRA issue: " + issueKey);
             }
             else{
                 int index = 1;
@@ -89,7 +92,6 @@ public class XMLParser {
                 issue.setJIRAKey(JIRAKey);
                 issue.setMainIssueKey(mainIssueKey);
                 issue.updateJIRAIssue(JIRAKey, mainIssueKey);
-                log.info("Successfully Updated JIRA issue: " + JIRAKey);
             }
         }
         catch(ParserConfigurationException | SAXException | IOException e){

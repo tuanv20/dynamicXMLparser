@@ -18,25 +18,34 @@ import com.atlassian.jira.rest.client.api.domain.Attachment;
 import com.atlassian.jira.rest.client.api.domain.Issue;
 import com.atlassian.jira.rest.client.api.domain.SearchResult;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInput;
+import com.atlassian.jira.rest.client.api.domain.input.ComplexIssueInputFieldValue;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInputBuilder;
+
 import com.atlassian.jira.rest.client.api.domain.input.LinkIssuesInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import tuanv20.mockjiraapi.JIRALogger;
 import tuanv20.mockjiraapi.Model.JIRAIssue;
 
 @RestController
+/** JIRA REST API Controller
+ * JIRA REST Java Client Core Maven Dependency 
+ * Bearer Token Authentication Handler
+ * HTTPURLConnection for CRUD Operations 
+*/
 public class JiraController {
     private static final Map<String, String> CUSTOMFIELDS = Map.of(
         "Filename", "customfield_10104",
         "AOS", "customfield_10106",
         "LOS", "customfield_10107",
-        "Antenna", "customfield_10108",
+        "Antenna", "customfield_10200",
         "PN-H", "customfield_10109",
-        "MP", "customfield_10110",
+        "Progress", "customfield_10201",
         "H-EQUIP", "customfield_10111",
         "H-CONFIG", "customfield_10112",
-        "L-CONFIG", "customfield_10113"
+        "L-CONFIG", "customfield_10113",
+        "MP", "customfield_10110"
     );
+
     @Value("${jira.url}")
     private String JIRA_URL;
     @Value("${jira.auth}")
@@ -64,19 +73,22 @@ public class JiraController {
     }
 
     public String createIssue(JIRAIssue issue, String filename){
-        long issueTypeID = 10000;
+        long issueTypeID = 10100;
         IssueInputBuilder newIssueBuilder = new IssueInputBuilder(issue.getProjKey(), issueTypeID, "Contact " + issue.getID());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Filename"), filename);
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("AOS"), issue.getFirstClass().getAOSCustom());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("LOS"), issue.getFirstClass().getLOSCustom());
-        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Antenna"), issue.getFirstClass().getAntenna());
-        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("PN-H"), issue.getFirstClass().getPN_H());
-        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("MP"), issue.getFirstClass().getMP());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Antenna"), ComplexIssueInputFieldValue.with("value", issue.getFirstClass().getAntenna()));
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("PN-H"), issue.getFirstClass().getPN_H());   
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("MP"), issue.getFirstClass().getMP());   
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-EQUIP"), issue.getParams().getHEQUIP());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-CONFIG"), issue.getParams().getHCONFIG());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("L-CONFIG"), issue.getParams().getLCONFIG());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Progress"), ComplexIssueInputFieldValue.with("value", "New"));
         IssueInput newIssue = newIssueBuilder.build();
-        return issueClient.createIssue(newIssue).claim().getKey();
+        String issueKey = issueClient.createIssue(newIssue).claim().getKey();
+        log.info("Successfully Created JIRA issue: " + issueKey);
+        return issueKey;
     }
 
     public void updateIssue(JIRAIssue issue, String JIRAKey, String mainIssueJiraKey){
@@ -84,7 +96,7 @@ public class JiraController {
         deleteAllAttachments(mainIssueJiraKey);
         URI mainAttachmentsUri = getAttachmentsURI(mainIssueJiraKey);
         addAttachments(issue.getAttachmentsURI(), mainAttachmentsUri, issue.getAttachments());
-        long issueTypeID = 10000;
+        long issueTypeID = 10100;
         IssueInputBuilder newIssueBuilder = new IssueInputBuilder(issue.getProjKey(), issueTypeID, "Contact " + issue.getID());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("AOS"), issue.getFirstClass().getAOSCustom());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("LOS"), issue.getFirstClass().getLOSCustom());
@@ -97,6 +109,8 @@ public class JiraController {
         IssueInput newIssue = newIssueBuilder.build();
         issueClient.updateIssue(JIRAKey, newIssue);
         addDescription(JIRAKey, issue.eventDescription());
+        log.info("Successfully Updated JIRA issue: " + JIRAKey);
+        
     }
 
     public URI getAttachmentsURI(String issue_ID){
@@ -242,31 +256,56 @@ public class JiraController {
 
     public void deleteIssueByFileName(String filename){
         Iterable<Issue> issues = searchClient.searchJql("Filename ~ " + filename).claim().getIssues();
-        Issue delIssue = null;
-        for(Issue issue : issues){
-            delIssue = issue;
+        for(Issue issue: issues){
+            issueClient.deleteIssue(issue.getKey(), true);
         }
-        issueClient.deleteIssue(delIssue.getKey(), true);
     }
 
     public String createMainIssue(JIRAIssue issue, String filename){
-        long issueTypeID = 10000;
+        long issueTypeID = 10100;
         IssueInputBuilder newIssueBuilder = new IssueInputBuilder(mainJiraKey, issueTypeID, "Contact " + issue.getID());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Filename"), filename);
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("AOS"), issue.getFirstClass().getAOSCustom());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("LOS"), issue.getFirstClass().getLOSCustom());
-        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Antenna"), issue.getFirstClass().getAntenna());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Antenna"), ComplexIssueInputFieldValue.with("value", issue.getFirstClass().getAntenna())); 
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("PN-H"), issue.getFirstClass().getPN_H());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("MP"), issue.getFirstClass().getMP());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-EQUIP"), issue.getParams().getHEQUIP());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("H-CONFIG"), issue.getParams().getHCONFIG());
         newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("L-CONFIG"), issue.getParams().getLCONFIG());
+        newIssueBuilder.setFieldValue(CUSTOMFIELDS.get("Progress"), ComplexIssueInputFieldValue.with("value", "New"));
         IssueInput newIssue = newIssueBuilder.build();
-        return issueClient.createIssue(newIssue).claim().getKey();
+        String issueKey = issueClient.createIssue(newIssue).claim().getKey();
+        log.info("Successfully Created JIRA issue: " + issueKey);
+        return issueKey;
+
     }
 
     public void linkIssues(String mainIssueKey, String linkedIssueKey){
         LinkIssuesInput linkInput = new LinkIssuesInput(mainIssueKey, linkedIssueKey, "Duplicate");
         issueClient.linkIssue(linkInput);    
         }
+
+    public void setAntenna(String projKey){
+        try{
+            URL url = new URL("http://vmoc-proj1.nrl.navy.mil:8080/rest/api/2/issue/");
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            httpConn.setRequestMethod("PUT");
+
+            httpConn.setRequestProperty("Content-type", "application/json");
+            httpConn.setRequestProperty("Authorization", "Bearer OTY5Njk2Mzg2NzA4Oh0amfT2mfNUjmNrlL/zR0uRroQr");
+
+            httpConn.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
+            writer.write("{\"fields\": {\n       \"project\":\n       {\n          \"key\":" + projKey +  "\n       },\n       \"customfield_10200\": { \"value\": \"DGS-A\" }");
+            writer.flush();
+            writer.close();
+            httpConn.getOutputStream().close();
+            httpConn.getResponseCode();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            System.err.println("Error adding description");
+        }
+    }
 }

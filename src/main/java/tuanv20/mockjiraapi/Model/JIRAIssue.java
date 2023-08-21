@@ -7,6 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tuanv20.mockjiraapi.Controller.JiraController;
 import tuanv20.mockjiraapi.JIRALogger;
 
+/** Represents a JIRA Issue
+ * Private Variables:
+ * JiraController
+ * ArrayList of Parameters, Datapoints, Events, and Attachments
+ * Jira Issue Key for Main Project
+ * Jira Issue Key for Sub-project
+ * Contact ID 
+*/
 public class JIRAIssue {
     JiraController JiraREST;
     FirstClass firstClassElems;

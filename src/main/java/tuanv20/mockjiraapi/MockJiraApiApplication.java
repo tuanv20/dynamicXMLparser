@@ -34,12 +34,13 @@ public class MockJiraApiApplication {
         archThread = appContext.getBean(ArchiveThread.class);     
         parser = appContext.getBean(XMLParser.class);
         JIRAController = appContext.getBean(JiraController.class); 
+        JIRAController.getAllFields();
         archThread.start();
-        //loadDirectory(ABS_PATH);
 		WatchService fileWatcher = FileSystems.getDefault().newWatchService();
         Path directory = Paths.get(ABS_PATH);
         directory.register((fileWatcher), StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
         WatchKey key;
+
         
         //Listen for events within the list of events returned by pollEvents()
         while( (key=fileWatcher.take()) != null){
@@ -56,7 +57,7 @@ public class MockJiraApiApplication {
                 modifyEvent(directoryPath.resolve( (Path) event.context()), fileName);
                 break;
             case "ENTRY_DELETE":
-                //deleteEvent(fileName);
+                deleteEvent(fileName);
                 break;
             case "ENTRY_CREATE":
                 modifyEvent(directoryPath.resolve( (Path) event.context()), fileName);
