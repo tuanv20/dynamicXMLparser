@@ -1,0 +1,69 @@
+<CONTACT project_id="JIR" contact_id="6RRKT79P">
+  <PN-H>7</PN-H>
+  <MP>TACO</MP>
+  <ANTENNA>DGS-C</ANTENNA>
+  <AOS>2023-08-20 19:26:12</AOS>
+  <LOS>2023-08-20 20:18:22</LOS>
+  <PARAMS>
+    <PARAM>
+      <NAME>H-EQUIP</NAME>
+      <VALUE>KS252-6 KS252-7 WS2_6901</VALUE>
+    </PARAM>
+    <PARAM>
+      <NAME>H-CONFIG</NAME>
+      <VALUE>D</VALUE>
+    </PARAM>
+    <PARAM>
+      <NAME>L-CONFIG</NAME>
+      <VALUE>L</VALUE>
+    </PARAM>
+  </PARAMS>
+  <DATA>
+    <DATAPOINT>
+      <TIME>2023-08-20 20:01:44</TIME>
+      <DELTA_AZ>0.3</DELTA_AZ>
+      <DELTA_EL>10.4</DELTA_EL>
+      <TLM_FR>0</TLM_FR>
+      <CMD>5</CMD>
+    </DATAPOINT>
+    <DATAPOINT>
+      <TIME>2023-08-20 20:07:31</TIME>
+      <DELTA_AZ>0.3</DELTA_AZ>
+      <DELTA_EL>10.4</DELTA_EL>
+      <TLM_FR>310</TLM_FR>
+      <CMD>2</CMD>
+    </DATAPOINT>
+    <DATAPOINT>
+      <TIME>2023-08-20 20:10:35</TIME>
+      <DELTA_AZ>0.3</DELTA_AZ>
+      <DELTA_EL>10.4</DELTA_EL>
+      <TLM_FR>855</TLM_FR>
+      <CMD>5</CMD>
+    </DATAPOINT>
+    <DATAPOINT>
+      <TIME>2023-08-20 20:16:53</TIME>
+      <DELTA_AZ>0.3</DELTA_AZ>
+      <DELTA_EL>10.4</DELTA_EL>
+      <TLM_FR>948</TLM_FR>
+      <CMD>4</CMD>
+    </DATAPOINT>
+  </DATA>
+  <EVENTS>
+    <EVENT>
+      <NAME>Misalignment</NAME>
+      <TIME>2023-08-20 20:15:37</TIME>
+    </EVENT>
+    <EVENT>
+      <NAME>Peak TLM</NAME>
+      <TIME>2023-08-20 20:17:05</TIME>
+    </EVENT>
+    <EVENT>
+      <NAME>Outage</NAME>
+      <TIME>2023-08-20 20:18:10</TIME>
+    </EVENT>
+    <EVENT>
+      <NAME>Peak TLM</NAME>
+      <TIME>2023-08-20 20:18:10</TIME>
+    </EVENT>
+  </EVENTS>
+</CONTACT>

@@ -7,13 +7,15 @@ import sys
 import math
 import time
 
-
 ProjectKeys = ["JIR", "TEST1"]
 Antennas = ["DGS-A", "DGS-B", "DGS-C", "DGS-D"]
+Events = ["Misalignment", "Peak TLM", "Outage", "Overlap"]
 
+#Function that generates a random Contact Time Range within the last week
+#and a maximum duration of 3 hours 
 def randomContactTimeRange():
-    SECS_IN_WEEK = 604800
-    CONTACT_LENGTH_SECS = 10800
+    SECS_IN_WEEK = 604800 
+    CONTACT_LENGTH_SECS = 10800 #3 hour maximum contact duration in seconds 
     CURR_TIME_SECS = int(time.time())
     contact_start_time = CURR_TIME_SECS - random.randint(CONTACT_LENGTH_SECS, SECS_IN_WEEK)
     contact_end_time = random.randint(contact_start_time, contact_start_time + CONTACT_LENGTH_SECS)
@@ -21,29 +23,49 @@ def randomContactTimeRange():
     end_str = datetime.fromtimestamp(contact_end_time).strftime('%Y-%m-%d %H:%M:%S')
     return (start_str, end_str)
 
+
+#Function that generates random datapoints with ascending time values 
+#within the bounds of the contact 
 def genRandomDataPoints(AOS, LOS):
     dataPoints = []
+    events = []
+    #Converts AOS and LOS string to epochs
     start_time = int(datetime.strptime(AOS, '%Y-%m-%d %H:%M:%S').timestamp())
+    event_time = start_time
     end_time = int(datetime.strptime(LOS, '%Y-%m-%d %H:%M:%S').timestamp())
-    numData = random.choice(range(3, 8))
+    tlm_fr = 0
+    #3 to 6 events generated randomly
+    #Generate a random time between start and end and then increment start to that value 
+    numData = random.choice(range(3, 6))
     for data in range(numData):
+        rand_event_time = random.randint(event_time, end_time)
         rand_data_time = random.randint(start_time, end_time)
         rand_data_str = datetime.fromtimestamp(rand_data_time).strftime('%Y-%m-%d %H:%M:%S')
+        rand_event_str = datetime.fromtimestamp(rand_event_time).strftime('%Y-%m-%d %H:%M:%S')
         dataPoints.append(
             {
             "TIME": rand_data_str,
             "DELTA_AZ" : "0.3",
             "DELTA_EL" : "10.4",
-            "TLM_FR" : str(random.choice(range(5000))),
+            "TLM_FR" : str(tlm_fr),
             "CMD" : str(random.choice(range(10)))
             },
         )
-        start_time = rand_data_time
-    return (dataPoints)
-    
 
+        events.append(
+            (random.choice(Events), rand_event_str)
+        )
+        
+        start_time = rand_data_time
+        event_time = rand_event_time
+        tlm_fr = random.randint(tlm_fr, 5000)
+    return (dataPoints, events)
+    
+#Generates an XML file for a contact using randomly generated data
+#into the contacts directory uses XML ElementTree library 
 def generateContact():
     AOS, LOS = randomContactTimeRange()
+    DATA, EVENTS = genRandomDataPoints(AOS, LOS)
     contactDict = {
         "proj_key": random.choice(ProjectKeys),
         "contact_id": ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8)),
@@ -59,11 +81,8 @@ def generateContact():
             ("H-CONFIG", "D"),
             ("L-CONFIG", "L")
         ],
-        "DATA" : genRandomDataPoints(AOS, LOS),
-        "EVENTS" : [
-            ("Acquisition of Service", AOS),
-            ("Loss of Service", LOS)
-        ]
+        "DATA" : DATA,
+        "EVENTS" : EVENTS
     }
 
     root = ET.Element('CONTACT')
@@ -97,10 +116,11 @@ def generateContact():
         eventElem_name.text = event[0]
         eventElem_time.text = event[1]
 
-        
+    #Formats XML so that it isn't a single line 
     ET.indent(tree, space="  ", level=0)
     tree.write('contacts/' + 'Contact_' + contactDict["contact_id"] + '.xml')
 
+#Option to generate multiple contacts
 if '-n' in sys.argv:
     for x in range(int(sys.argv[2])):
         generateContact()

@@ -26,8 +26,8 @@ public class Linechart {
         createDataset(issue),
         PlotOrientation.VERTICAL,
         true,true,false);
-        int first_tlm = issue.getData().get(0).getTlm_fr();
-        this.linechart.getCategoryPlot().getRangeAxis().setLowerBound(first_tlm);
+        // int first_tlm = issue.getData().get(0).getTlm_fr();
+        // this.linechart.getCategoryPlot().getRangeAxis().setLowerBound(first_tlm);
     }
 
     private DefaultCategoryDataset createDataset(JIRAIssue issue) {
