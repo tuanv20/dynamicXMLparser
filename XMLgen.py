@@ -36,6 +36,7 @@ def genRandomDataPoints(AOS, LOS):
     tlm_fr = 0
     #3 to 6 events generated randomly
     #Generate a random time between start and end and then increment start to that value 
+    #Similar logic for generating random event times within the contact duration and TLM_FR counts 
     numData = random.choice(range(3, 6))
     for data in range(numData):
         rand_event_time = random.randint(event_time, end_time)
@@ -45,8 +46,8 @@ def genRandomDataPoints(AOS, LOS):
         dataPoints.append(
             {
             "TIME": rand_data_str,
-            "DELTA_AZ" : "0.3",
-            "DELTA_EL" : "10.4",
+            "DELTA_AZ" : str(round(random.uniform(0, 10), 1)),
+            "DELTA_EL" : str(round(random.uniform(0, 10), 1)),
             "TLM_FR" : str(tlm_fr),
             "CMD" : str(random.choice(range(10)))
             },
@@ -78,8 +79,8 @@ def generateContact():
         ],
         "PARAMS" : [
             ("H-EQUIP", "KS252-6 KS252-7 WS2_6901"),
-            ("H-CONFIG", "D"),
-            ("L-CONFIG", "L")
+            ("H-CONFIG", random.choice(string.ascii_uppercase)),
+            ("L-CONFIG", random.choice(string.ascii_uppercase))
         ],
         "DATA" : DATA,
         "EVENTS" : EVENTS
@@ -89,10 +90,12 @@ def generateContact():
     root.attrib = {"project_id" : contactDict["proj_key"], "contact_id" : contactDict["contact_id"]}
     tree = ET.ElementTree(root)
 
+    #Creates the First Class Data Element Subtrees
     for fc in contactDict["FIRST_CLASS"]:
         fcElem = ET.SubElement(root, fc[0])
         fcElem.text = fc[1]
     
+    #Creates the Param Subtree 
     Params = ET.SubElement(root, 'PARAMS')
     for par in contactDict["PARAMS"]:
         param = ET.SubElement(Params, 'PARAM')
@@ -101,6 +104,7 @@ def generateContact():
         param_name.text = par[0]
         param_val.text = par[1]
 
+    #Creates the Data Subtree 
     Data = ET.SubElement(root, 'DATA')
     for data in contactDict["DATA"]:
         dp = ET.SubElement(Data, 'DATAPOINT')
@@ -108,6 +112,7 @@ def generateContact():
             dataElem = ET.SubElement(dp, key)
             dataElem.text = val
 
+    #Creates the Events Subtree
     Events = ET.SubElement(root, 'EVENTS')
     for event in contactDict["EVENTS"]:
         eventElem = ET.SubElement(Events, 'EVENT')

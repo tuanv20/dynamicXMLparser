@@ -1,4 +1,5 @@
 package tuanv20.mockjiraapi.Model;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -7,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tuanv20.mockjiraapi.Controller.JiraController;
 import tuanv20.mockjiraapi.JIRALogger;
 
-/** Represents a JIRA Issue
+/**
+ * Represents a JIRA Issue
  * Private Variables:
  * JiraController
  * ArrayList of Parameters, Datapoints, Events, and Attachments
  * Jira Issue Key for Main Project
  * Jira Issue Key for Sub-project
- * Contact ID 
-*/
+ * Contact ID
+ */
 public class JIRAIssue {
     JiraController JiraREST;
     FirstClass firstClassElems;
@@ -30,7 +32,7 @@ public class JIRAIssue {
     @Autowired
     JIRALogger log;
 
-    public JIRAIssue(JiraController JiraREST){
+    public JIRAIssue(JiraController JiraREST) {
         this.firstClassElems = new FirstClass();
         this.params = new Param();
         this.data = new ArrayList<Data>();
@@ -39,31 +41,31 @@ public class JIRAIssue {
         this.JiraREST = JiraREST;
     }
 
-    public JIRAIssue(String JIRAKey){
+    public JIRAIssue(String JIRAKey) {
         this.JIRAKey = JIRAKey;
     }
-    
-    public String getProjKey(){
+
+    public String getProjKey() {
         return this.projKey;
     }
 
-    public String getJIRAKey(){
+    public String getJIRAKey() {
         return this.JIRAKey;
     }
 
-    public String getID(){
+    public String getID() {
         return this.id;
     }
 
-    public ArrayList<File> getAttachments(){
+    public ArrayList<File> getAttachments() {
         return this.attachments;
     }
 
-    public URI getAttachmentsURI(){
+    public URI getAttachmentsURI() {
         return JiraREST.getAttachmentsURI(this.JIRAKey);
     }
 
-    public String createJIRAIssue(JIRAIssue issue, String filename){
+    public String createJIRAIssue(JIRAIssue issue, String filename) {
         this.mainIssueJiraKey = JiraREST.createMainIssue(issue, filename);
         JiraREST.addLabel(this.mainIssueJiraKey, this.projKey);
         this.JIRAKey = JiraREST.createIssue(issue, filename);
@@ -75,64 +77,65 @@ public class JIRAIssue {
         return this.JIRAKey;
     }
 
-    public void updateJIRAIssue(String JIRAKey, String mainIssueJiraKey) throws IOException{
+    public void updateJIRAIssue(String JIRAKey, String mainIssueJiraKey) throws IOException {
         JiraREST.updateIssue(this, JIRAKey, mainIssueJiraKey);
     }
 
-    public void addAttachment(File attachment){
+    public void addAttachment(File attachment) {
         this.attachments.add(attachment);
     }
 
-    public void addDataPoint(ArrayList<String> vars){
+    public void addDataPoint(ArrayList<String> vars) {
         String[] dataPointVars = vars.toArray(new String[vars.size()]);
         this.data.add(new Data(dataPointVars));
     }
 
-    public void setJIRAKey(String JIRAKey){
+    public void setJIRAKey(String JIRAKey) {
         this.JIRAKey = JIRAKey;
     }
 
-    public void setMainIssueKey(String mainIssueJiraKey){
+    public void setMainIssueKey(String mainIssueJiraKey) {
         this.mainIssueJiraKey = mainIssueJiraKey;
     }
 
-    public void setProjKey(String projKey){
+    public void setProjKey(String projKey) {
         this.projKey = projKey;
     }
 
-    public void setID(String id){
+    public void setID(String id) {
         this.id = id;
     }
 
-    public FirstClass getFirstClass(){
+    public FirstClass getFirstClass() {
         return this.firstClassElems;
     }
-     public Param getParams(){
+
+    public Param getParams() {
         return this.params;
     }
 
-     public ArrayList<Data> getData(){
+    public ArrayList<Data> getData() {
         return this.data;
     }
 
-    public ArrayList<Event> getEvents(){
+    public ArrayList<Event> getEvents() {
         return this.events;
     }
 
-    public String eventDescription(){
+    public String eventDescription() {
         StringBuilder descBuilder = new StringBuilder();
-        if(this.events.iterator().hasNext()){
+        if (this.events.iterator().hasNext()) {
             descBuilder.append("||Event Name||Event Date||\\n");
-            for(Event event : this.events){
+            for (Event event : this.events) {
                 descBuilder.append("|" + event.getName() + "|" + event.getDate() + "|\\n");
             }
         }
         return descBuilder.toString();
     }
 
-    public String toString(){
+    public String toString() {
         String out = "";
-        out = "[" + firstClassElems.toString() + ", " + params.toString() + ", " + data.toString() + "]"; 
+        out = "[" + firstClassElems.toString() + ", " + params.toString() + ", " + data.toString() + "]";
         return out;
-    }  
+    }
 }
