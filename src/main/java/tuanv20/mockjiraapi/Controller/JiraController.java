@@ -114,7 +114,6 @@ public class JiraController {
         issueClient.updateIssue(JIRAKey, newIssue);
         addDescription(JIRAKey, issue.eventDescription());
         log.info("Successfully Updated JIRA issue: " + JIRAKey);
-
     }
 
     public URI getAttachmentsURI(String issue_ID) {
@@ -129,13 +128,19 @@ public class JiraController {
         }
     }
 
-    public void deleteAttachment(String attachmentID) throws IOException {
-        URL url = new URL(JIRA_URL + "/rest/api/2/attachment/" + attachmentID);
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        httpConn.setRequestMethod("DELETE");
-        httpConn.setRequestProperty("Authorization", AUTH_HEADER);
-        httpConn.setRequestProperty("Accept", "application/json");
-        httpConn.getResponseCode();
+    public void deleteAttachment(String attachmentID) {
+        try{
+            URL url = new URL(JIRA_URL + "/rest/api/2/attachment/" + attachmentID);
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            httpConn.setRequestMethod("DELETE");
+            httpConn.setRequestProperty("Authorization", AUTH_HEADER);
+            httpConn.setRequestProperty("Accept", "application/json");
+            httpConn.getResponseCode();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            log.error("Error deleting attachment");
+        }
     }
 
     public ArrayList<String> getAttachmentIds(String issue_ID) {
@@ -149,14 +154,9 @@ public class JiraController {
     }
 
     public void deleteAllAttachments(String issue_ID) {
-        try {
-            ArrayList<String> attachmentIDs = this.getAttachmentIds(issue_ID);
-            for (String attachmentID : attachmentIDs) {
-                deleteAttachment(attachmentID);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.error("Error Deleting All Attachments");
+        ArrayList<String> attachmentIDs = this.getAttachmentIds(issue_ID);
+        for (String attachmentID : attachmentIDs) {
+            deleteAttachment(attachmentID);
         }
     }
 
@@ -278,7 +278,6 @@ public class JiraController {
         String issueKey = issueClient.createIssue(newIssue).claim().getKey();
         log.info("Successfully Created JIRA issue: " + issueKey);
         return issueKey;
-
     }
 
     public void linkIssues(String mainIssueKey, String linkedIssueKey) {

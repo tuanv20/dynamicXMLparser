@@ -1,0 +1,104 @@
+-Docker compose pull grabs images from DoD repository with versioning specified by shell environment variables
+-Development is done by making code edits to specific repositories and then building a
+custom image from the top directory of that repository and replacing the image in the docker-compose
+-Endpoints use OpenAPI specification: Paths are $refed and written in separate .yaml files in paths subdirectory 
+and these path .yamls $ref schema and response .yaml files in other subdirectories to create the endpoint.
+-Front end components interact with the server side using Ext Ajax requests to the relevant endpoints 
+-Ajax requests specify method type, request url, payload, and failure/success responses
+
+GRM
+    WatchService API
+    -Instantiate an instance of a watchservice object 
+    -Register for directory events (CREATE, DELETE, UPDATE) for a specific directory, specifying a specific watchservice 
+    -While loop calls take() method from WatchService API (used this over poll because it has blocking wait)
+        -Instead of busy waiting which is continually running and checking, a blocked wait is suspended by the OS 
+        until it is notified of an events
+        -Have to handle all events in key.pollEvents() in the case of simultaneous edits
+    -Map each event to a CRUD operation handled by the service layer
+
+    Jira Java Client Core
+    -Repository dependency that handled basic Jira functionality (CRUD operations on Jira instance)
+    -For more complex functionality, required creation of HttpUrlConnection object 
+        -Set Authorization headers and other necessary headers
+        -Edit payload of request by writing to the HttpUrlConnection's output stream
+        -Send response and error handling
+
+    Archive Thread
+    -Simple secondary thread to clean up backend filesystem
+    -Application env vars specify the frequency of the archival thread  
+    -Removes all files that are past a certain modified date threshhold 
+        -Triggers the WatchService API event to archive the issue on JIRA side 
+
+    JQL queries
+    -Utilizes Jira's default querying language to search for issues 
+    -Replaced the need for a database (created a solely backend application)
+        -reinventing the wheel since Jira maintains an underlying database 
+
+Custom Shell 
+    General concept 
+        -Utilized the posix_spawn library to mimic the fork/exec logic for process creation 
+        -Handled I/O, redirection, and piping using dup2 and open posix file actions
+        -Handled process groups using posix spawn's setpgroup file action
+        -Terminal input and text parsing handled --> stored in structs representing the commands 
+            -Contained information on I/O files and redirection
+        -Job struct contained data for the command line represented as a group of processes (job)
+    Signal Handling 
+        -Override default SIGCHLD handler to catch SIGCHLD responses from background processes 
+        -Foreground processes will block SIGCHLD (causing the signals to be held by the OS and 
+        delivered later) and will run a blocked waiting helper function to handle its children. 
+        -Implemented child process status handler 
+            -Above handlers use waitpid() calls to get status of child processes and pass status to this helper
+            -Helper uses WIF macros to query the status and react accordingly
+                -Decrement the number of alive processes
+                -Handled terminal ownership
+                -Stopped or killed processes if necessary 
+    Builtins
+        -Moving jobs to and from the Foreground
+        -Stopping/continuing jobs + killing jobs 
+    posix_spawn
+        -Library that acts as a wrapper around the fork/exec logic of process creation
+        -Specify file actions to take between the internal fork and exec calls
+            -adddup2 to rewrite the file descriptors for piping
+            -addopen/adddup2 to handle I/O 
+            -setpgroup to establish/set process groups 
+        -Utilized data from job struct 
+    Misc 
+        -Check for dead jobs: Needed a way to remove(free) completed jobs
+        -At the start of every inputted line, would check for dead jobs and
+        free them and their dependent data before doing any processing
+
+Threadpool
+    General Concept 
+        -Fork/join threadpool framework for recursively handling divide + conquer algorithms
+        -Create a global queue of tasks that is externally submitted to by the main thread
+        -Create a collection of threads that will execute a 'work' method  
+            -Threads will block and wait for signals indicating tasking
+            -Threads will grab tasks and recursively break them down into subtasks 
+            which are then pushed back onto the global queue (Work sharing)
+            -The threads will asynchronously wait for their subtasks to complete 
+            which will require threads to update the status of promised tasks and signal 
+            their 'parent' task of completion 
+    Mutexes 
+        -Need a way to handle race conditions (one thread reads data and attempts to edit it but another thread reads the same data before it's finished updating)
+        -Use mutexes to 'lock' the resources that could be contended for by multiple threads (such as global queue)
+        -All threads can still do work simultaneously but only one thread can grab work from the queue at a time
+        -This will obviously decrease performance but will lead to deterministic results (doesn't matter if your program is fast if it's incorrect)
+    Deadlock + Work Helping
+        -Because a thread is blocking and waiting for its subtask to finish, there's a possibility that if there are
+        few enough threads and a deep enough level of recursion that all the threads will be stuck waiting on their 
+        subtasks to finish and there will be no way for any of them to get what they need since every working thread is blocked
+        -Solution is to implement work helping where a thread should try to execute any non-executed subtasks so that the only 
+        subtasks it is waiting for are ones that are in progress already
+        -This requires a significant revamp of the data in the promised task struct
+    Work Sharing vs. Work Stealing
+        -In Work sharing, all threads are fighting for the global lock which leads to contention and performance decrease
+        -Better, more complex alternative is having individual worker queues for each thread
+            -Will require mutexes on a per-thread basis 
+            -Will be meaningless if the overarching global lock is still held
+            -Need more mutexes to ensure less time waiting for locks
+Portfolio Website
+Recipe Manager
+NodeJS/Express 
+        
+    
+    

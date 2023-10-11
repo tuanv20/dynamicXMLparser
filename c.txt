@@ -1,0 +1,443 @@
+CS 3304 Midterm Study Guide
+Questions
+Chapter 1
+Why do we study programming languages?
+What are the programming domains and an example of each?
+What are the 4 language criteria and how are they related?
+What are the influences on language design?
+What are the language design trade-offs?
+What are the language paradigms and an example of each?
+What are the main implementation methods for programming languages?
+Chapter 2
+What is the general timeline for programming languages? (You do not need to memorize the chart, but generally knowing which languages came before others, e.g. Cobol came before Smalltalk)
+What languages broadly influence what other language?
+What are some early pre-cursors of programming languages?
+What was the first compiling system?
+Fortran...what were it's major additions to programming languages?
+Functional programming...why was it created and what language came first?
+Algol...why is it such an important language?
+Cobol...what is its purpose and what did it add to programming languages?
+Why is Basic an important language?
+What did PL/I get wrong?
+Why was ADA successful?
+What was the first OO language?
+Chapter 3
+What is syntax?
+What is semantics?
+How do we describe sentences?
+What are lexemes?
+What are tokens?
+How is a sentence parsed? e.g. How is a parse tree created?
+What is the test for language ambiguity?
+What are two broad category of semantics?
+What are the 3 types of dynamic semantics?
+How do you compute the weakest precondition on a statement or set of statements?
+Chapter 4
+When analyzing a program for syntactical correctness, what are the two major steps?
+Why are these two steps usually separated?
+What are the two major approaches to syntax analysis?
+What is the most common top-down parsing method?
+What is the short-coming of this approach?
+What is the most common bottom-up parsing algorithm?
+Chapter 5
+What are the design issues related to names?
+What is the sextuple of attributes for a variable?
+When considering the address of a variable, what is an alias?
+What is a data type?
+What are the two broad categories of binding?
+What is scope?
+What is lifetime?
+How is static scope used to determine the value of a variable?
+How is dynamic scope used to determine the value of a variable?
+What is a referencing environment and how is it used to determine the value of a variable?
+Chapter 6
+What is a descriptor?
+How is a descriptor used?
+What are primitive data types?
+How are integers and floating point data types typically represented?
+How are strings represented?
+What are design issues with strings?
+What are user-defined data types?
+What is a an enum?
+What are design issues with enums?
+What is an array?
+What are design issues with arrays?
+Rust
+How do you construct basic programs using Rust?
+Said another way, how do you sequence, select, iterate, and write functions in Rust?
+Pascal
+How do you write basic Pascal?
+How are blocks formed?
+How are functions written?
+How are procedures written?
+How are files included?
+Racket
+How awesome is racket...
+How to write functions.
+How to implement conditions
+
+
+
+
+Chapter 1
+Why do we study programming languages?
+Increased ability to express ideas
+Improved background for choosing appropriate languages
+Increased ability to learn new languages 
+Better use of already known languages
+Overall advancement of computing 
+What are the programming domains?
+Scientific applications: Large number of floating point computations; use of arrays → Fortran.
+Business applications: Produce reports, use decimal numbers and characters → COBOL
+Artificial Intelligence: Symbols rather than numbers manipulated, use of linked lists → LISP and other functional Programming languages
+Systems Programming: Need efficiency because of continuous use → C 
+Web Software: Eclectic collection of languages, markup (HTML), scripting (PHP), general-purpose (Java) etc.
+What are the 4 language criteria and how are they related?
+Readability: The ease with which programs can be read and understood
+Simplicity: Manageable set of features + constructs, Few ways to do the same thing, Minimal operator overloading (changing the way an operator works like making ‘+’ concatenate strings). 
+Orthogonality: Operations do not have side effects and primitive constructs of the language don’t depend on one another. Components are loosely coupled and actions they take only affect themselves.
+Adequate predefined data types
+Identifiers, meaningful keywords, self-descriptive constructs, etc
+Writability: The ease with which a language can be used to create programs
+Few constructs, a small number of primitives, a small set of rules for combining primitives
+Abstraction: The ability to define and use constructs in a way that allows the specific details to be ignored
+Expressivity: A set of relatively convenient ways of specifying operations, strong and numerous operations and builtin functions
+Reliability: conformance to specifications (performs to its specifications)
+Type checking: testing for type errors
+Exception handling: Intercept run-time errors and take corrective measures
+Aliasing: Presence of two or more distinct referencing methods for the same memory (different vars pointing to same memory) 
+Readability + Writability: A program that is easier to read/write will most likely be more reliable
+Cost: Ultimate total cost
+Training programmers to use the language
+Writing programs 
+Executing programs
+Reliability: Poor reliability → higher costs
+Maintaining programs 
+What are the influences on language design?
+Computer Architecture: Languages are developed around the prevalent computer architecture (von Neumann architecture). 
+Imperative languages were most dominant because of von Neumann computers
+Data and programs stored in memory
+Memory is separate from CPU 
+Instructions and data piped from memory to CPU
+General cycle: Initialize program counter, fetch instruction pointed to by counter, increment counter, decode instruction, execute instruction, repeat.
+
+Program Design Methodologies:
+New software development methods (OO Software Development) led to new programming paradigms and by extension new programming languages. 
+1950-1960s: Simple applications; worry about machine efficiency
+Late 1960s: Readability and better control structures became important, top-down design + step-wise refinement
+Late 1970s: Process-oriented to data oriented. Data abstraction (simplified representation of underlying data) 
+Mid 1980s: OOP → Abstraction, Inheritance, Polymorphism 
+Language Categories:
+Imperative: 
+Variables, assignment statements, iterations
+Languages that support OOP
+Scripting languages
+Visual languages
+C, Java, Perl, JavaScript, Visual BASIC, .NET, C++
+Functional:
+Main means of making computations by applying functions to given parameters 
+LISP, Scheme, ML, F# 
+Logic
+Rule-based (rules are specified in no order)
+Prolog
+Markup/hybrid
+Markup languages extended to support some programming
+JSTL, XSLT
+What the language design trade-offs?
+Reliability vs Cost: Increased reliability → Increased cost. Java demands all references to array elements be checked for proper indexing, which leads to increased execution costs.
+Readability vs Writability: Complex and advanced functionality to make simple tasks able to be written easily results in less readable operations and syntax. 
+Writability vs reliability: More powerful and flexible programming constructs are usually more unreliable (C++ pointers)
+What are the main implementation methods for programming languages?
+Compilation: Programs are translated into machine language, includes JIT systems → Large commercial applications
+Slow translation, fast execution
+Lexical analysis: converts characters in the source program into lexical units
+Syntax analysis: Transforms lexical units into parse trees which represent the syntactic structure of the program
+Semantics analysis: Generate intermediate code
+Code generation: Machine code is generated 
+Pure Interpretation: Programs are interpreted by another program known as an interpreter → Small programs or when efficiency is not an issue
+No translation
+Easier implementation: run-time errors can easily and immediately be displayed
+Slower execution (10 to 100 times slower than compiled)
+Now rare for traditional high-level languages
+Significant comeback with some web scripting languages (JS, PHP)
+Hybrid Implementation Systems: A compromise between compilers and pure interpreters → Small + Medium systems when efficient is not the first concern
+Chapter 2
+What is the general timeline for programming languages? (You do not need to memorize the chart, but generally knowing which languages came before others, e.g. Cobol came before Smalltalk)
+Early languages: Fortran, FLOW-MATIC → COBOL, Lisp, Algol
+Early descendants: 
+Algol → Pascal, Basic, C 
+Lisp → ML, Scheme,
+Prolog (1973 around same time as C and Pascal)
+Small Talk + Ada (Earliest OOP attempts)
+Modern Languages:
+Java, Python, JavaScript, .NET, Ruby, etc.
+What languages broadly influence what other language?
+Lisp → Scheme, OCaml, Haskell, Racket, Scala, ML
+APL/SNOBOL → Python, JS (dynamic languages)
+Algol → C, Java, (imperative languages)
+What are some early pre-cursors of programming languages?
+Zuse’s Plankalkul: Minimal hardware programming, pseudocodes, designed in 1945 but not published until 1972. Never implemented, advanced data structures. FIRST high-level programming language
+Fortran 1: Designed for the new IBM 704 which had index registers and floating point hardware. Led to the idea of compiled programming. Computers were small + unreliable, applications were mostly scientific, no programming methodology or tools, machine efficiency was biggest concern (1957). FIRST compiler was released in 1957 after 18 years of worker efforts
+Fortran was the first imperative programming language
+Lisp was the first functional programming language
+What was the first compiling system?
+The A-0 compiling system developed by Grace Hopper 
+Fortran...what were it's major additions to programming languages?
+First computer with floating point hardware
+First compiled language 
+Fortran IV had explicit type declaration, logical selection statements, subprogram names could be parameters, boolean if statement. 
+Fortran 77 added character string handling, logical loop control statement, and if-then-else statement 
+Functional programming...why was it created and what language came first?
+Created to handle list processing and Artificial Intelligence
+Started in the mid 1950s 
+Lisp (List Processing) was the first representative language 
+Only two data types: atoms + lists
+Syntax is based on lambda calculus 
+No need for variables or assignments, controlled via recursion and conditional expressions, dominant language for AI
+Algol...why is it such an important language?
+Was the result of efforts to create the first universal language
+Goals of the language: Close to mathematical notation, good for describing algorithms, must be translatable to machine code
+Concept of type was formalized, names could be any length, arrays could have any number of subscripts, parameters were separated by mode, compound statement, recursion, dynamic arrays, local scope. 
+Cobol...what is it's purpose and what did it add to programming languages?
+Developed for business programming 
+Design goals: Look like simple english, easy to use, broaden the base of computer users, not be biased by current compiler problems
+First macro facility in a high level language, hierarchical data structures, nested selection statements, strong separate data division. 
+First language required by the DoD
+Was influenced by FLOW-MATIC 
+Why is Basic an important language?
+The first programming language to implement time sharing (multiple users at different terminals using the same computer resources at the same time)
+VERY easy to learn and VERY simple and inefficient 
+Goals: Easy for nonscience students to use, must be pleasant and friendly, must provide fast turnaround for homework, must allow free and private access, must consider user time more important than computer time.
+What did PL/I get wrong?
+Tried to be everything for everybody, too complex and too large, many new features were poorly designed.
+Why was ADA successful?
+History’s largest design effort: involved hundreds of people, a lot of money, and about 8 years of work. 
+Packages - support for data abstraction
+Elaborate exception handling
+Generic programming units
+Concurrency through the tasking model
+Competitive design, included all that was known about software engineering and language design
+What was the first OO language?
+Smalltalk: First full implementation of an OOP language (data abstraction, inheritance, dynamic binding, etc)
+Pioneered the GUI design
+Chapter 3
+What is syntax?
+The form or structure of the expressions, statements, and program units. Refers to the grammar of the language. 
+What is semantics?
+The meaning of the expressions, statements, and program units. How code is interpreted.
+How do we describe sentences?
+A sentence is a string of characters over some alphabet
+What are lexemes?
+A lexeme is the lowest level syntactic unit of a language. In the context of a programming language this can refer to the physical numeric literals, operators, special words (int, =, ‘Hello’, etc)
+What are tokens?
+A token is a category of lexemes (an identifier). Lexemes fall into these buckets/categories known as token. For example, in programming languages this could be operators, identifiers, constant, etc.
+How is a sentence parsed? e.g. How is a parse tree created?
+Break down statement using grammar till the leaves are lexemes 
+
+What is a left-most and right-most derivation? Show an example.
+What is the test for language ambiguity?
+Can multiple parse trees be made for the same sentence?
+What are two broad categories of semantics?
+Static - includes data typing, making sure all variables are declared, correct scoping, whether assignments are type-compatible, etc. Errors can be checked during compile time. Nothing to do with meaning 8
+Dynamic - What actually happens when a program is run (errors can only be caught during execution time)
+What are the 3 types of dynamic semantics?
+Operational semantics
+Denotational semantics
+Axiomatic semantics
+How do you compute the weakest precondition on a statement or set of statements?
+Find the least restrictive pre-condition that will guarantee the validity of the associated postcondition. For example, take the equation a = b + 1 {a > 1}. A possible precondition is b > 10 but the weakest precondition is b > 0 because it has the largest range of possibilities that all fall satisfy the postcondition. 
+Chapter 4
+When analyzing a program for syntactical correctness, what are the two major steps?
+Lexical Analysis 
+Syntactical Analysis 
+Why are these two steps usually separated?
+Simplicity: Less complex approaches can be used for lexical analysis as opposed to syntactical analysis. Separating these analyses simplifies the parser
+Efficiency: Separation allows for optimization of the lexical analyzer
+Portability: Parts of the lexical analyzer may not be portable but the parser is always portable 
+What are the two major approaches to syntax analysis?
+Bottom-up approach
+Top-down approach 
+What is the most common top-down parsing method?
+Recursive Descent
+What is the short-coming of this approach?
+It is difficult to provide really good error messages. They cannot do parses that require arbitrarily long look aheads.
+What is the most common bottom-up parsing algorithm?
+LR family of the shift reduce parsers
+Chapter 5
+What are the design issues related to names?
+Are names case sensitive?
+Are special words reserved words or keywords?
+What is the sextuple of attributes for a variable?
+Value - The contents of the variable
+Scope - The range of statements over which a variable is visible
+Lifetime - The time during which a variable’s content is bound to a memory cell. Objects have lifetimes and variables have scopes.
+Address -The memory address with which a variable is associated. A variable may have different addresses at different times during execution and it may have different addresses at different places in the program.
+Name - A symbolic representation for an underlying object in memory. Not all variables will have names. 
+Type - Determines the range of values + variables + set of operations that are defined for values of that type; in the case of floating point, type also determines precision
+When considering the address of a variable, what is an alias?
+When two variables can be used to access the same memory location, they are called aliases. Aliases are created via pointers and reference var
+What is a data type?
+See above
+What are the two broad categories of binding?
+Static - Occurs before runtime and remains unchanged throughout the execution of the program
+Dynamic - Occurs during execution and can change throughout execution of the program.
+What is scope?
+See above
+What is a lifetime?
+See above
+How is static scope used to determine the value of a variable?
+Search declarations, first locally and then in increasingly larger enclosing scopes until one is found for the name
+How is dynamic scope used to determine the value of a variable?
+References to a variable are are connected to the declaration of the variable by searching backwards through the chain of subprogram calls that executed up to the point in which the variable’s value is being determined. 
+What is a referencing environment and how is it used to determine the value of a variable?
+The referencing environment is the collection of all names that are visible in the statement.
+Static: Local variables + all visible variables in all enclosing scopes (static class variables within the same scope, global variables, etc.)
+Dynamic: Local variables + all visible variables in all active subprograms. A subprogram is active if its execution has begun but has not yet terminated.
+Chapter 6
+What is a descriptor?
+A descriptor is a collection of attributes for a variable of a data type (the length of a string/array, 
+How is a descriptor used?
+Static strings: compile time descriptors for the length/address
+Dynamic strings: Run-time descriptors for the max length, current length, and address
+1-D array: Compile time descriptors for element type, index type, index lower/upper bound, address
+Multi-dimensional array: Same as above but has descriptor for dimensions
+What are primitive data types?
+Almost all programming languages provide a set of primitive data types
+Primitive data types: Those not defined in terms of other data types
+Some primitive data types are merely reflections of the hardware
+Others require only a little non-hardware support for their implementation
+How are integers and floating point data types typically represented?
+Integer
+Almost always an exact reflection of the hardware so the mapping is trivial
+There may be as many as eight different integer types in a language
+Java’s signed integer sizes: byte, short, int, long
+Float
+Model real numbers, but only as approximations
+Languages for scientific use support at least two floating-point types (e.g., float and double; sometimes more)
+Usually exactly like the hardware, but not always
+IEEE Floating-Point Standard 754
+How are strings represented? What are design issues with strings?
+What encoding do we use
+Is the string static or dynamic?
+Static – generally fixed length
+Dynamic – flexible length 
+Escape sequences
+Are strings built-in or not?
+How is the length of a string determined?
+What operations are allowed on strings?
+Searching, slicing, length, etc.
+Descriptor for a string
+Static
+Static string
+Length
+Address
+Dynamic
+Address
+Length, max length 
+Data 
+What are user-defined data types?
+User defined data types are object instances of a data type created by the user (an instance of a user-defined class) 
+What is an enum?
+List of options, potentially user defined
+An enumeration of options
+What are design issues with enums?
+Cannot use integer, must use string **(fact check me tho)
+What is an array?
+A contiguous block of memory of data of the same type
+Individual data elements are accessed via an index
+What are design issues with arrays?
+Design Considerations 
+Capacity of memory
+Size of elements, data type
+How is length determined 
+Is memory mutable?
+Index checking
+What is the range of indices 
+Floating point indices 
+Negative indices 
+Not usually flexible 
+Rust
+Key Components of Rust
+Comment: //
+
+
+How do you construct basic programs using Rust?
+	//packages
+	fn main () {
+	}
+	fn helper(x: i32, y: i32) → i32
+{
+			return x+y
+}
+Said another way, how do you sequence, select, iterate, and write functions in Rust?
+
+
+Loops –
+while number != 0
+{ … }
+for word in this_line.split(“ “)
+{
+println!(“\tword: { }”, word);
+}
+
+Ex. Using separate files
+//func_impl.rs
+pub fn func1( ) → i32
+{
+	return 17;
+}
+pub fn function2(x: i32, y: i32) → i32
+{
+	return x+y
+}
+//functions.rs
+mod func_impl;
+use func_impl::func1;
+use func_impl::function2;
+
+fn main()
+{
+	println!(“Function 1: { }”, func1( ));
+	println!(“Function 2: { }”, function2(func1( ), 8));
+}
+
+Very similar to Java; main difference is that every variable is immutable by default and mutable variables need to be specified with the mut keyword and variables in general are defined with the let keyword (like JS).
+Import modules by using the ‘use’ keyword and ‘::’ is like ‘.’ in Java. For example: import java.util in Java → use java::util in Rust
+Iteration: For x in list { }, while loops stay the same 
+Selection: If, else if, else chains stay the same with all the logic operators staying the same DOES NOT USE PARENTHESES. Can also use match statements (similar to switch) 
+Pascal
+How do you write basic Pascal?
+Ex. ./selection.pas 
+Program Selection;
+
+var
+	number: Integer;
+	rando: Longint; 
+
+begin 
+	rando := Random(5) + 1;  //:= is assignment 
+	if ( rando = number ) then //= is equality not assignment 
+		writeln(‘You guessed the magic number!’) //no ; here
+	else if (number < rando) then 
+	begin
+		writeln(‘Sorry you were wrong. ‘);
+		//last statement in block does not need ;
+		writeln(“I wanted you to guess ‘, rando, ‘ Run the program again’) 
+	end
+else
+begin
+		…
+end; //; here to show end of if block
+end. //main program ends in period 
+
+
+How are blocks formed?
+Blocks are formed starting with a begin statement and ending with an end statement. A ‘;’ will indicate the end of a 
+How are functions written?
+How are procedures written?
+How are files included?
+Racket
+How awesome is racket...
+How to write functions.
+How to implement conditions
+

@@ -39,8 +39,8 @@ public class MockJiraApiApplication {
         Path directory = Paths.get(ABS_PATH);
         directory.register((fileWatcher), StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
                 StandardWatchEventKinds.ENTRY_MODIFY);
-        WatchKey key;
 
+        WatchKey key;
         // Listen for events within the list of events returned by pollEvents()
         while ((key = fileWatcher.take()) != null) {
             for (WatchEvent<?> event : key.pollEvents()) {
@@ -71,7 +71,6 @@ public class MockJiraApiApplication {
      *
      * @param directory Absolute path to directory being loaded represented as a
      *                  String
-     *
      */
 
     public static void loadDirectory(String directory) {

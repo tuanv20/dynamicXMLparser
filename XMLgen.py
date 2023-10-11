@@ -7,7 +7,7 @@ import sys
 import math
 import time
 
-ProjectKeys = ["JIR", "TEST1"]
+ProjectKeys = ["AAAS"]
 Antennas = ["DGS-A", "DGS-B", "DGS-C", "DGS-D"]
 Events = ["Misalignment", "Peak TLM", "Outage", "Overlap"]
 
