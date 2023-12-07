@@ -1,6 +1,4 @@
 spring:
-  # main:
-  #   web-application-type: none
   output:
     ansi:
       enabled: always
@@ -9,9 +7,6 @@ paths:
   dir_path: /Users/atran/GRM/mock-jira-api/contact-gen
   arch_path: /Users/atran/GRM/mock-jira-api/contacts
   img_path: /Users/atran/GRM/mock-jira-api/contact-png
-  # dir_path: /app/contact-gen
-  # arch_path: /app/contacts
-  # img_path: /app/contact-png
 
 arch: 
   refresh_sec: 5
